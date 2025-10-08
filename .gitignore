@@ -1,0 +1,14 @@
+.DS_Store
+
+node_modules
+
+dist
+vocs.config.ts.*
+.vercel
+tsconfig.tsbuildinfo
+src/pages/smart-contracts
+src/pages/tmp
+src/dist
+
+src/public/link-previews.json
+vocs.config.tsx.timestamp-*.mjs
