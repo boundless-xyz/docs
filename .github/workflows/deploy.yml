@@ -1,5 +1,17 @@
 name: deploy docs
-on: push
+on:
+  push:
+    branches: master
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   call-build:
     uses: ./.github/workflows/build.yml
@@ -7,15 +19,23 @@ jobs:
     needs: call-build
     runs-on: ubuntu-latest
     steps:
+      - name: Setup pages
+        uses: actions/configure-pages@v5
+
       - name: Download built docs from GH storage
         uses: actions/download-artifact@v5
         with:
           path: src
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Upload docs to GH pages
+        uses: actions/upload-pages-artifact@v4
         with:
-          folder: src
+          path: src
+      
+      - name: Deploy to github pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
 
 
 
