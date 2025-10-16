@@ -1,0 +1,23 @@
+name: deploy docs
+on: push
+jobs:
+  call-build:
+    uses: ./.github/workflows/build.yml
+  deploy:
+    needs: call-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download built docs from GH storage
+        uses: actions/download-artifact@v5
+        with:
+          path: src
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: src
+
+
+
+
+      
