@@ -1,5 +1,4 @@
 {
-  "extends": "@risc0/ui/config/tsconfig.base.json",
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

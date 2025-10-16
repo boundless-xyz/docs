@@ -1,4 +1,4 @@
-import biomePlugin from "vite-plugin-biome";
+// import biomePlugin from "vite-plugin-biome";
 import VitePluginSitemap from "vite-plugin-sitemap";
 import { defineConfig } from "vocs";
 
@@ -294,7 +294,7 @@ export default defineConfig({
     },
   },
   vite: {
-    plugins: [generateSitemap(), biomePlugin()],
+    plugins: [generateSitemap()],
   },
   sidebar: SIDEBAR_ITEMS,
   socials: [
@@ -311,7 +311,7 @@ export default defineConfig({
       link: "https://discord.com/invite/boundlessxyz",
     }
   ],
-  rootDir: "site",
+  rootDir: "src",
   title: "Boundless Docs",
   theme: {
     accentColor: {
