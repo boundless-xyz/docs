@@ -4,6 +4,8 @@ on:
     branches:
       - 'master'
 
+
+
 permissions:
   contents: read
   pages: write
@@ -19,21 +21,13 @@ jobs:
   deploy:
     needs: call-build
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Setup pages
         uses: actions/configure-pages@v5
 
-      - name: Download static doc files
-        uses: actions/download-artifact@v5
-        with:
-          name: github-pages
-          path: .
-
-      - name: Upload static doc files to GitHub Pages
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: .
-      
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
