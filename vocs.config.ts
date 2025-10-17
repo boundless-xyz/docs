@@ -275,8 +275,9 @@ export function generateSitemap() {
   }
 
   return VitePluginSitemap({
-    hostname: "https://boundless-xyz.github.io/docs",
-    dynamicRoutes: extractRoutes(allSidebarItems),
+    hostname: "https://boundless-xyz.github.io",
+    // dynamicRoutes: extractRoutes(allSidebarItems),
+    dynamicRoutes: extractRoutes(allSidebarItems).map(route => `/docs${route}`),
     changefreq: "weekly",
     outDir: "src/dist",
   });

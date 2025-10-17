@@ -31,9 +31,10 @@ jobs:
         run: bunx vocs build
 
       ## UPLOAD STATIC DOCS TO STORAGE TO USE IN TEST/DEPLOY.YML
-      - name: Upload docs to GH storage
+      - name: Upload static doc files
         uses: actions/upload-artifact@v4
         with:
+          name: github-pages
           path: src/dist
           include-hidden-files: true
 

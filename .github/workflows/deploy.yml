@@ -1,7 +1,8 @@
 name: deploy docs
 on:
   push:
-    branches: master
+    branches:
+      - 'master'
 
 permissions:
   contents: read
@@ -22,17 +23,18 @@ jobs:
       - name: Setup pages
         uses: actions/configure-pages@v5
 
-      - name: Download built docs from GH storage
+      - name: Download static doc files
         uses: actions/download-artifact@v5
         with:
-          path: src
+          name: github-pages
+          path: .
 
-      - name: Upload docs to GH pages
+      - name: Upload static doc files to GitHub Pages
         uses: actions/upload-pages-artifact@v4
         with:
-          path: src
+          path: .
       
-      - name: Deploy to github pages
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
 
