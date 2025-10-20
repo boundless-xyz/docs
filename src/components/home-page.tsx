@@ -4,20 +4,20 @@ const navigation = [
   {
     title: "For Developers",
     links: [
-      ["Build a Program", "/developers/tutorials/build"],
-      ["Proof Lifecycle", "/developers/proof-lifecycle"],
-      ["Request a Proof", "/developers/tutorials/request"],
-      ["Tracking a Request", "developers/tutorials/tracking"],
-      ["Use a Proof", "developers/tutorials/use"],
+      ["Build a Program", "/docs/developers/tutorials/build"],
+      ["Proof Lifecycle", "/docs/developers/proof-lifecycle"],
+      ["Request a Proof", "/docs/developers/tutorials/request"],
+      ["Tracking a Request", "/docs/developers/tutorials/tracking"],
+      ["Use a Proof", "/docs/developers/tutorials/use"],
     ],
   },
   {
     title: "For Provers",
     links: [
-      ["The Boundless Proving Stack", "/provers/proving-stack"],
-      ["Broker Config", "/provers/broker"],
-      ["Monitoring", "/provers/monitoring"],
-      ["Performance Optimization", "/provers/performance-optimization"],
+      ["The Boundless Proving Stack", "/docs/provers/proving-stack"],
+      ["Broker Config", "/docs/provers/broker"],
+      ["Monitoring", "/docs/provers/monitoring"],
+      ["Performance Optimization", "/docs/provers/performance-optimization"],
     ],
   },
   {
@@ -25,41 +25,41 @@ const navigation = [
     links: [
       ["Boundless Mainnet Explorer", "https://explorer.boundless.network/orders"],
       ["Boundless Testnet Explorer", "https://explorer.testnet.boundless.network/orders"],
-      ["Boundless CLI", "/developers/tooling/sdk"],
-      ["Boundless SDK", "/developers/tooling/sdk"],
-      ["Bento CLI", "/developers/tooling/cli"],
+      ["Boundless CLI", "/docs/developers/tooling/sdk"],
+      ["Boundless SDK", "/docs/developers/tooling/sdk"],
+      ["Bento CLI", "/docs/developers/tooling/cli"],
     ],
   },
   {
     title: "Tutorials",
     links: [
-      ["Callbacks", "/developers/tutorials/callbacks"],
-      ["Proof Composition", "/developers/tutorials/proof-composition"],
-      ["Proof Types", "/developers/tutorials/proof-types"],
-      ["Setting up a Trusted Prover", "/developers/tutorials/sensitive-inputs"],
-      ["Smart Contract Requestors", "/developers/tutorials/smart-contract-requestor"],
-      ["Migrating from Bonsai", "/developers/tutorials/bonsai"],
+      ["Callbacks", "/docs/developers/tutorials/callbacks"],
+      ["Proof Composition", "/docs/developers/tutorials/proof-composition"],
+      ["Proof Types", "/docs/developers/tutorials/proof-types"],
+      ["Setting up a Trusted Prover", "/docs/developers/tutorials/sensitive-inputs"],
+      ["Smart Contract Requestors", "/docs/developers/tutorials/smart-contract-requestor"],
+      ["Migrating from Bonsai", "/docs/developers/tutorials/bonsai"],
     ],
   },
   {
     title: "$ZKC",
     links: [
-      ["$ZKC Quick Start", "/zkc/quick-start"],
-      ["$ZKC as Proving Collateral", "/zkc/collateral"],
-      ["ZK Mining: Wallet Setup", "/zkc/mining/wallet-setup"],
-      ["ZK Mining: Enabling ZK Mining", "/zkc/mining/enable"],
-      ["ZK Mining: Walkthrough", "/zkc/mining/walkthrough"],
-      ["ZK Mining: Claiming Rewards", "/zkc/mining/claiming-rewards"],
+      ["$ZKC Quick Start", "/docs/zkc/quick-start"],
+      ["$ZKC as Proving Collateral", "/docs/zkc/collateral"],
+      ["ZK Mining: Wallet Setup", "/docs/zkc/mining/wallet-setup"],
+      ["ZK Mining: Enabling ZK Mining", "/docs/zkc/mining/enable"],
+      ["ZK Mining: Walkthrough", "/docs/zkc/mining/walkthrough"],
+      ["ZK Mining: Claiming Rewards", "/docs/zkc/mining/claiming-rewards"],
     ],
   },
   {
     title: "Reference",
     links: [
-      ["Chains & Deployments", "/developers/smart-contracts/deployments"],
-      ["Verifier Contracts", "/developers/smart-contracts/verifier-contracts"],
-      ["Boundless Smart Contract Docs", "/developers/smart-contracts/reference"],
+      ["Chains & Deployments", "/docs/developers/smart-contracts/deployments"],
+      ["Verifier Contracts", "/docs/developers/smart-contracts/verifier-contracts"],
+      ["Boundless Smart Contract Docs", "/docs/developers/smart-contracts/reference"],
       ["$ZKC Token Source Code & Docs", "https://github.com/boundless-xyz/zkc?tab=readme-ov-file#zkc"],
-      ["Bento Technical Design", "/provers/bento"],
+      ["Bento Technical Design", "/docs/provers/bento"],
     ],
   },
 ];
@@ -85,25 +85,25 @@ export default function HomePage() {
           <h1 className="font-semibold text-2xl sm:text-2xl">Get Started</h1>
           <div className="flex flex-col gap-3 sm:flex-row">
             <a
-              href="/developers/quick-start"
+              href="/docs/developers/quick-start"
               className="rounded-lg border border-neutral-400 px-4 py-1 font-bold text-[20px] hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
             >
               Developers
             </a>
             <a
-              href="/provers/quick-start"
+              href="/docs/provers/quick-start"
               className="rounded-lg border border-neutral-400 px-4 py-1 font-bold text-[20px] hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
             >
               Provers
             </a>
             <a
-              href="/zkc/quick-start"
+              href="/docs/zkc/quick-start"
               className="rounded-lg border border-neutral-400 px-4 py-1 font-bold text-[20px] hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
             >
               $ZKC
             </a>
             <a
-              href="/zkc/mining/overview"
+              href="/docs/zkc/mining/overview"
               className="rounded-lg border border-neutral-400 px-4 py-1 font-bold text-[20px] hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
             >
               ZK Mining

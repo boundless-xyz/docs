@@ -284,9 +284,13 @@ export function generateSitemap() {
 
 export default defineConfig({
   rootDir: "src",
-  baseUrl: 'https://boundless-xyz.github.io',
   basePath: '/docs',
+  baseUrl: 'https://boundless-xyz.github.io',
   logoUrl: "/logo.svg",
+  vite: {
+    base: '/docs/',
+    plugins: [generateSitemap()],
+  },
   topNav: [
     { text: "Explorer", link: "https://explorer.boundless.network/orders" },
     { text: "Support Forum", link: "https://github.com/boundless-xyz/boundless/discussions" }
@@ -295,10 +299,6 @@ export default defineConfig({
     mono: {
       google: "Ubuntu Mono",
     },
-  },
-  vite: {
-    base: '/docs/',
-    plugins: [generateSitemap()],
   },
   sidebar: SIDEBAR_ITEMS,
   socials: [
