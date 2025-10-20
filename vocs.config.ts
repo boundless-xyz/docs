@@ -283,6 +283,7 @@ export function generateSitemap() {
 }
 
 export default defineConfig({
+  rootDir: "src",
   baseUrl: 'https://boundless-xyz.github.io',
   basePath: '/docs',
   logoUrl: "/logo.svg",
@@ -314,7 +315,6 @@ export default defineConfig({
       link: "https://discord.com/invite/boundlessxyz",
     }
   ],
-  rootDir: "src",
   title: "Boundless Docs",
   theme: {
     accentColor: {
