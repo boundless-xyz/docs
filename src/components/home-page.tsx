@@ -128,7 +128,7 @@ export default function HomePage() {
 
       <div className="mx-auto flex max-w-4xl flex-col px-4">
         <h2 className="vocs_H2 vocs_Heading">Videos</h2>
-        <div className="grid grid-cols-2 gap-6 lg:gap-y-10">
+        <div clasName="grid grid-cols-2 gap-6 lg:gap-y-10">
           {videos.map((video) => (
             <a
               key={video.title}

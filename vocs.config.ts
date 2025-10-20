@@ -284,6 +284,7 @@ export function generateSitemap() {
 
 export default defineConfig({
   baseUrl: 'https://boundless-xyz.github.io',
+  basePath: '/docs',
   logoUrl: "/logo.svg",
   topNav: [
     { text: "Explorer", link: "https://explorer.boundless.network/orders" },

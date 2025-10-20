@@ -6,11 +6,11 @@ export default function RootLayout({ children }) {
   return (
     <>
       {typeof window !== "undefined" && (
-        <link rel="canonical" href={`https://docs.boundless.network${window.location.pathname}`} />
+        <link rel="canonical" href={`https://boundless-xyz.github.io${window.location.pathname}`} />
       )}
 
       {/* Custom JS scripts */}
-      <script defer data-domain="docs.beboundless.xyz" src="https://plausible.io/js/script.outbound-links.js" />
+      {/* <script defer data-domain="docs.beboundless.xyz" src="https://plausible.io/js/script.outbound-links.js" /> */}
 
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </>
