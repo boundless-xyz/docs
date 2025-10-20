@@ -275,7 +275,7 @@ export function generateSitemap() {
   }
 
   return VitePluginSitemap({
-    hostname: "https://boundless-xyz.github.io/docs",
+    hostname: "https://boundless-xyz.github.io",
     dynamicRoutes: extractRoutes(allSidebarItems),
     changefreq: "weekly",
     outDir: "src/dist",
@@ -284,7 +284,6 @@ export function generateSitemap() {
 
 export default defineConfig({
   baseUrl: 'https://boundless-xyz.github.io',
-  // basePath: '/docs', 
   logoUrl: "/logo.svg",
   topNav: [
     { text: "Explorer", link: "https://explorer.boundless.network/orders" },
@@ -296,6 +295,7 @@ export default defineConfig({
     },
   },
   vite: {
+    base: '/docs/',
     plugins: [generateSitemap()],
   },
   sidebar: SIDEBAR_ITEMS,
