@@ -13,7 +13,7 @@ When you submit a proof request to Boundless, you can track its status programma
 Here's how to wait for a request to be fulfilled:
 
 <StripRustCodeComments>
-```rust no_run
+```rust
 # use boundless_market::{Client, StorageProviderConfig};
 # use boundless_market::request_builder::OfferParams;
 # use std::time::Duration;
@@ -27,7 +27,6 @@ Here's how to wait for a request to be fulfilled:
 # let program = vec![0u8; 32]; // Example program bytes
 # let input = vec![]; // Example input
 # let offer_params = OfferParams::builder(); // Example offer parameters
-
 // Submit your request
 let request = client.new_request()
     .with_program(program)
@@ -76,7 +75,7 @@ Boundless tracks these request states:
 When tracking requests, handle these potential outcomes:
 
 <StripRustCodeComments>
-```rust no_run
+```rust
 # use boundless_market::client::ClientError;
 # use boundless_market::contracts::{boundless_market::MarketError, FulfillmentData};
 # use boundless_market::Client;
@@ -89,7 +88,6 @@ When tracking requests, handle these potential outcomes:
 # let request_id = U256::from(0); // Example request ID
 # let check_interval = Duration::from_secs(5);
 # let expires_at = 0u64; // Example expiry time
-
 match client.wait_for_request_fulfillment(request_id, check_interval, expires_at).await {
     Ok(fulfillment) => {
         // Process the fulfilled proof
@@ -114,7 +112,7 @@ match client.wait_for_request_fulfillment(request_id, check_interval, expires_at
 For more control, you can manually check request status:
 
 <StripRustCodeComments>
-```rust no_run
+```rust
 # use boundless_market::contracts::RequestStatus;
 # use boundless_market::Client;
 # use alloy_primitives::U256;
@@ -125,7 +123,6 @@ For more control, you can manually check request status:
 # let client = Client::builder().build().await?;
 # let request_id = U256::from(0); // Example request ID
 # let expires_at = 0u64; // Example expiry time
-
 // Check status once
 let status = client.boundless_market.get_status(request_id, Some(expires_at)).await?;
 match status {

@@ -12,4 +12,5 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-include!(concat!(env!("OUT_DIR"), "/doctests.rs"));
+// include!(concat!(env!("OUT_DIR"), "/doctests.rs"));
+include!("generated_doctests.rs");
