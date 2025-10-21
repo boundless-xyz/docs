@@ -41,12 +41,7 @@ jobs:
         working-directory: ./test-rust-code
     steps:
       - uses: actions/checkout@v5
-      - uses: risc0/risc0/.github/actions/rustup@v3.0.3
-      - name: install cargo risczero
-        uses: ./.github/actions/bininstall-risc0
-        with:
-          risczero-version: "3.0.3"
-          toolchain-version: "1.88.0"
+      - uses: dtolnay/rust-toolchain@stable
       - run: cargo test --message-format human
 
   deploy:
