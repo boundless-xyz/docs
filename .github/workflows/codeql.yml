@@ -1,0 +1,9 @@
+name: "Skip CodeQL" 
+
+on: [push, pull_request] # Triggers on all pushes and PRs
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "OK"
