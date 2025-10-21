@@ -36,25 +36,28 @@ struct RustSnippet {
 
 fn main() {
     let home = env::var("CARGO_MANIFEST_DIR").unwrap();
+    let home_path = env::var("CARGO_MANIFEST_PATH").unwrap();
+    println!(" Yo hello,  {}", home_path);
+    println!(" Yo hello,  {}", home);
     let mut level = Level::new();
 
-    for root_dir in ["documentation"] { // TODO: change to new root dir
-        let pattern = format!("{home}/../../{root_dir}/src/pages/**/*.mdx");
-        let base = format!("{home}/../../{root_dir}",);
-        let base = Path::new(&base).canonicalize().unwrap();
+    const ROOT_DIR: &str = "documentation";
 
-        for entry in glob(&pattern).unwrap() {
-            let path = entry.unwrap();
-            let path = Path::new(&path).canonicalize().unwrap();
-            println!("cargo:rerun-if-changed={}", path.display());
+    let pattern = format!("{home}/../../{ROOT_DIR}/src/pages/**/*.mdx");
+    let base = format!("{home}/../../{ROOT_DIR}",);
+    let base = Path::new(&base).canonicalize().unwrap();
 
-            let rel = path.strip_prefix(&base).unwrap();
-            let mut parts = vec![];
-            for part in rel {
-                parts.push(part.to_str().unwrap());
-            }
-            level.insert(path.clone(), &parts[..]);
+    for entry in glob(&pattern).unwrap() {
+        let path = entry.unwrap();
+        let path = Path::new(&path).canonicalize().unwrap();
+        println!("cargo:rerun-if-changed={}", path.display());
+
+        let rel = path.strip_prefix(&base).unwrap();
+        let mut parts = vec![];
+        for part in rel {
+            parts.push(part.to_str().unwrap());
         }
+        level.insert(path.clone(), &parts[..]);
     }
 
     let out = format!("{}/doctests.rs", env::var("OUT_DIR").unwrap());
@@ -72,7 +75,10 @@ impl fmt::Display for Level {
 
 impl Level {
     fn new() -> Level {
-        Level { nested: HashMap::new(), files: vec![] }
+        Level {
+            nested: HashMap::new(),
+            files: vec![],
+        }
     }
 
     fn insert(&mut self, path: PathBuf, rel: &[&str]) {
@@ -82,7 +88,10 @@ impl Level {
         if rel.len() == 1 {
             self.files.push(path);
         } else {
-            let nested = self.nested.entry(rel[0].to_string()).or_insert(Level::new());
+            let nested = self
+                .nested
+                .entry(rel[0].to_string())
+                .or_insert(Level::new());
             nested.insert(path, &rel[1..]);
         }
     }
@@ -105,7 +114,12 @@ impl Level {
 
         self.write_space(dst, level);
         for file in &self.files {
-            let stem = Path::new(file).file_stem().unwrap().to_str().unwrap().replace('-', "_");
+            let stem = Path::new(file)
+                .file_stem()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .replace('-', "_");
             let content = fs::read_to_string(file).expect("Failed to read file");
             let rust_snippets = self.extract_rust_snippets(&content);
 
@@ -115,7 +129,10 @@ impl Level {
 
             let mut seen_snippets = Vec::new();
             for snippet in rust_snippets {
-                if !seen_snippets.iter().any(|s: &RustSnippet| s.content == snippet.content) {
+                if !seen_snippets
+                    .iter()
+                    .any(|s: &RustSnippet| s.content == snippet.content)
+                {
                     seen_snippets.push(snippet);
                 }
             }
