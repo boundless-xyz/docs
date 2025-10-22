@@ -42,7 +42,7 @@ jobs:
         working-directory: ./test-rust-code
     steps:
       - uses: actions/checkout@v5
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
       - run: cargo test --message-format human
 
   deploy:
