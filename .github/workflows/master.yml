@@ -29,11 +29,10 @@ jobs:
       - name: Build Docs
         run: bunx vocs build
       - name: Upload Docs to Pages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-pages-artifact@v4
         with:
           name: github-pages
           path: src/dist
-          include-hidden-files: true
 
   test-rust-code:
     runs-on: ubuntu-latest
