@@ -29,9 +29,9 @@ jobs:
       - name: Build Docs
         run: bunx vocs build
       - name: Upload Docs to Pages
-        id: deployment
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
+          name: github-pages
           path: src/dist
           include-hidden-files: true
 
@@ -43,6 +43,8 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
+        with:
+          toolchain: stable
       - run: cargo test --message-format human
 
   deploy:
@@ -53,7 +55,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy from pages storage
-        id: deployment
         uses: actions/deploy-pages@v4
 
 
