@@ -29,7 +29,6 @@ jobs:
       - name: Build Docs
         run: bunx vocs build
       - name: Upload Docs to Pages
-        id: deployment
         uses: actions/upload-artifact@v4
         with:
           name: github-pages
@@ -53,10 +52,8 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy from pages storage
-        id: deployment
         uses: actions/deploy-pages@v4
 
 
