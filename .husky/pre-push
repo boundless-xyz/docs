@@ -1,0 +1,4 @@
+bun run lint:markdown
+bun run check:links
+bun run script:generate-smart-contract-docs
+bun run build

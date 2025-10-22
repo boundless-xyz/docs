@@ -26,13 +26,20 @@ jobs:
         with: 
           bun-version: "1.3.0"
       - run: bun install
+      - name: Lint markdown
+        run: bun run lint:markdown
+      - name: Check links
+        run: bun run check:links
+      - name: Generate smart contract docs
+        run: bun run script:generate-smart-contract-docs
       - name: Build Docs
         run: bunx vocs build
       - name: Upload Docs to Pages
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
           name: github-pages
-          path: src/dist
+          path: src/dist/
+          include-hidden-files: true
 
   test-rust-code:
     runs-on: ubuntu-latest

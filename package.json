@@ -5,42 +5,26 @@
   "scripts": {
     "build": "vocs build",
     "dev": "vocs dev",
-    "check-links": "bun ./scripts/check-links.ts",
-    "check-markdown": "remark . --quiet --ignore-pattern 'src/pages/developers/smart-contracts/**'",
-    "check": "run-p check-markdown check-links",
-    "ci": "bun run build && bun run check",
-    "format-markdown": "remark . --output --use sort-definitions --use remark-lint-match-punctuation --use remark-lint-no-url-trailing-slash",
-    "generate-link-previews": "bun scripts/generate-link-previews.ts",
-    "generate-smart-contracts-docs": "cd .. && rm -rf documentation/src/pages/tmp && forge doc --build --out documentation/src/pages/tmp && cd documentation && bun ./scripts/process-forge-docs.ts && rm -rf src/pages/tmp",
-    "preview": "vocs preview"
+    "format:markdown": "remark ./src/pages --output --use remark-lint-match-punctuation --use remark-lint-no-url-trailing-slash",
+    "lint:markdown": "remark ./src/pages --ignore-pattern 'src/pages/developers/smart-contracts/**'",
+    "script:links": "bun ./scripts/check-links.ts",
+    "script:generate-smart-contract-docs": "rm -rf src/pages/tmp && forge doc --build --out src/pages/tmp && bun ./scripts/generate-smart-contract-docs.ts && rm -rf src/pages/tmp",
+    "prepare": "husky"
   },
   "dependencies": {
     "remark": "15.0.1",
     "remark-cli": "12.0.1",
-    "remark-inline-links": "7.0.0",
-    "remark-lint-heading-capitalization": "1.3.0",
-    "remark-lint-heading-case": "1.0.0",
     "remark-lint-match-punctuation": "0.2.1",
     "remark-lint-no-url-trailing-slash": "3.0.1",
-    "remark-math": "6.0.0",
-    "remark-preset-lint-consistent": "6.0.1",
-    "remark-preset-lint-markdown-style-guide": "6.0.1",
-    "remark-preset-lint-recommended": "7.0.1",
-    "remark-remove-url-trailing-slash": "3.0.0",
-    "remark-sort-definitions": "3.0.0",
-    "remark-toc": "9.0.0",
-    "remark-wiki-link": "2.0.1",
     "tailwindcss": "4.1.13",
     "vite-plugin-sitemap": "0.8.2",
     "vocs": "1.0.13"
   },
   "packageManager": "bun@1.3.0",
-  "bin": {
-    "vocs": "./node_modules/.bin/vocs"
-  },
   "devDependencies": {
     "@number-flow/react": "0.5.10",
-    "@tanstack/react-query": "5.90.4"
+    "@tanstack/react-query": "5.90.4",
+    "husky": "9.1.7"
   },
   "patchedDependencies": {
     "vocs@1.0.13": "patches/vocs@1.0.13.patch"
