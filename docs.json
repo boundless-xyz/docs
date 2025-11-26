@@ -79,132 +79,187 @@
   "interaction": {
     "drilldown": true
   },
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/developers/what"
+    }
+  ],
   "navigation": {
     "tabs": [
       {
-        "tab": "Home",
-        "groups": [
-          {
-            "group": " ",
-            "pages": [
-              "/"
-            ]
-          }
-        ]
-      },
-      {
         "tab": "Build",
-        "groups": [
+        "anchors": [
           {
-            "group": " ",
-            "pages": [
-              "developers/what",
-              "developers/why",
-              "developers/proof-lifecycle"
+            "anchor": "Quick Start",
+            "icon": "rocket",
+            "groups": [
+              {
+                "group": " ",
+                "pages": [
+                  "developers/quick-start"
+                ]
+              }
             ]
           },
           {
-            "group": "Getting started",
-            "expanded": false,
-            "pages": [
-              "developers/quick-start"
+            "anchor": "Introduction",
+            "icon": "book-open",
+            "groups": [
+              {
+                "group": "Introduction",
+                "pages": [
+                  "developers/what",
+                  "developers/why",
+                  "developers/proof-lifecycle"
+                ]
+              }
             ]
           },
           {
-            "group": "Core Concepts",
-            "pages": [
-              "developers/tutorials/build",
-              "developers/tutorials/auction",
-              "developers/tutorials/request",
-              "developers/tutorials/tracking",
-              "developers/tutorials/use",
-              "developers/tutorials/troubleshooting"
+            "anchor": "Core Concepts",
+            "icon": "cube",
+            "groups": [
+              {
+                "group": "Core Concepts",
+                "pages": [
+                  "developers/tutorials/build",
+                  "developers/tutorials/auction",
+                  "developers/tutorials/request",
+                  "developers/tutorials/tracking",
+                  "developers/tutorials/use",
+                  "developers/tutorials/troubleshooting"
+                ]
+              }
             ]
           },
           {
-            "group": "Tutorials",
-            "pages": [
-              "developers/tutorials/callbacks",
-              "developers/tutorials/proof-composition",
-              "developers/tutorials/proof-types",
-              "developers/tutorials/bonsai",
-              "developers/tutorials/sensitive-inputs",
-              "developers/tutorials/smart-contract-requestor"
+            "anchor": "Tooling",
+            "icon": "wrench",
+            "groups": [
+              {
+                "group": "Tooling",
+                "pages": [
+                  "developers/tooling/sdk",
+                  "developers/tooling/cli"
+                ]
+              }
             ]
           },
           {
-            "group": "Smart Contracts",
-            "pages": [
-              "developers/smart-contracts/smart-contract-docs",
-              "developers/smart-contracts/deployments",
-              "developers/smart-contracts/verifier-contracts"
+            "anchor": "Tutorials",
+            "icon": "graduation-cap",
+            "groups": [
+              {
+                "group": "Tutorials",
+                "pages": [
+                  "developers/tutorials/callbacks",
+                  "developers/tutorials/proof-composition",
+                  "developers/tutorials/proof-types",
+                  "developers/tutorials/bonsai",
+                  "developers/tutorials/sensitive-inputs",
+                  "developers/tutorials/smart-contract-requestor"
+                ]
+              }
             ]
           },
           {
-            "group": "Dev Tooling",
-            "pages": [
-              "developers/tooling/sdk",
-              "developers/tooling/cli"
+            "anchor": "Smart Contracts",
+            "icon": "file-contract",
+            "groups": [
+              {
+                "group": "Smart Contracts",
+                "pages": [
+                  "developers/smart-contracts/deployments",
+                  "developers/smart-contracts/verifier-contracts"
+                ]
+              }
             ]
           },
           {
-            "group": "Steel",
-            "pages": [
-              "developers/steel/quick-start",
-              "developers/steel/what-is-steel",
-              "developers/steel/how-it-works",
-              "developers/steel/commitments",
-              "developers/steel/history",
-              "developers/steel/events"
+            "anchor": "Steel",
+            "icon": "shield",
+            "groups": [
+              {
+                "group": "Steel",
+                "pages": [
+                  "developers/steel/quick-start",
+                  "developers/steel/what-is-steel",
+                  "developers/steel/how-it-works",
+                  "developers/steel/commitments",
+                  "developers/steel/history",
+                  "developers/steel/events"
+                ]
+              }
             ]
           },
           {
-            "group": "Kailua",
-            "pages": [
-              "developers/kailua/intro"
+            "anchor": "Kailua",
+            "icon": "water",
+            "groups": [
+              {
+                "group": "Kailua",
+                "pages": [
+                  "developers/kailua/intro"
+                ]
+              }
             ]
           }
         ]
       },
       {
         "tab": "Prove",
-        "groups": [
+        "anchors": [
           {
-            "group": " ",
+            "anchor": "Quick Start",
+            "icon": "rocket",
             "pages": [
               "provers/quick-start"
             ]
           },
           {
-            "group": "Core Concepts",
-            "pages": [
-              "provers/proving-stack",
-              "provers/broker",
-              "provers/monitoring",
-              "provers/performance-optimization",
-              "provers/bento"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "$ZKC",
-        "groups": [
-          {
-            "group": " ",
-            "pages": [
-              "zkc/quick-start",
-              "zkc/collateral"
+            "anchor": "Core Concepts",
+            "icon": "gear",
+            "groups": [
+              {
+                "group": "Core Concepts",
+                "pages": [
+                  "provers/proving-stack",
+                  "provers/broker",
+                  "provers/monitoring",
+                  "provers/performance-optimization",
+                  "provers/bento"
+                ]
+              }
             ]
           },
           {
-            "group": "ZK Mining",
-            "pages": [
-              "zkc/mining/overview",
-              "zkc/mining/wallet-setup",
-              "zkc/mining/enable",
-              "zkc/mining/walkthrough",
-              "zkc/mining/claiming-rewards"
+            "anchor": "$ZKC Overview",
+            "icon": "coins",
+            "groups": [
+              {
+                "group": "$ZKC Overview",
+                "pages": [
+                  "zkc/quick-start",
+                  "zkc/collateral"
+                ]
+              }
+            ]
+          },
+          {
+            "anchor": "ZK Mining",
+            "icon": "pickaxe",
+            "groups": [
+              {
+                "group": "ZK Mining",
+                "pages": [
+                  "zkc/mining/overview",
+                  "zkc/mining/wallet-setup",
+                  "zkc/mining/enable",
+                  "zkc/mining/walkthrough",
+                  "zkc/mining/claiming-rewards"
+                ]
+              }
             ]
           }
         ]

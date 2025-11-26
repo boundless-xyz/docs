@@ -4,6 +4,7 @@ description: Run a prover on Boundless.
 icon: fast-forward
 ---
 
+
 ## Requirements
 
 A recommended minimum configuration for proving performance:
@@ -14,7 +15,11 @@ A recommended minimum configuration for proving performance:
 * GPUs: at least one NVIDIA GPU with >= 8GB of VRAM.
     - In testing, we've found the best performance on the following NVIDIA GPUs: 4090, and L4.
     - While it's possible to use a single GPU, we recommend at least 10 GPUs to run a competitive prover.
-* OS: Ubuntu 24.04
+* OS: Ubuntu 24.04 Full Virtual Machine or Bare Metal
+
+<Warning>
+    The following tutorial will *not* work on standard dockerized cloud providers such as [Vast.ai](https://vast.ai) as the proving stack relies on Docker. We are in the process of working on some `supervisord` scripts and Docker images that would allow for a much cleaner setup in dockerized environments. 
+</Warning>
 
 ## Clone the Boundless Repo
 
