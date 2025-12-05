@@ -1,5 +1,11 @@
 # Boundless Documentation Navigation
-# Run: bun run build-docs.ts to merge this with docs.base.json to create docs.json
+# Run: `bun run scripts/build-docs.ts` to merge this with docs.base.json to create docs.json
+
+global:
+  anchors:
+    - anchor: Latest Release Notes
+      icon: tag
+      href: https://github.com/boundless-xyz/boundless/releases
 
 tabs:
   - tab: Build

@@ -87,6 +87,15 @@
     }
   ],
   "navigation": {
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Latest Release Notes",
+          "icon": "tag",
+          "href": "https://github.com/boundless-xyz/boundless/releases"
+        }
+      ]
+    },
     "tabs": [
       {
         "tab": "Build",
