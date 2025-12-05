@@ -277,9 +277,9 @@ let request = client.new_request()
 
 ### Inputs
 
-:::tip[*Rather not have inputs publicly available?**]
+<Tip>
 When working with trusted provers, you can store inputs in *Amazon S3* and restrict access via AWS S3's permission management - [Sensitive Inputs tutorial](/developers/tutorials/sensitive-inputs).
-:::
+</Tip>
 
 To execute and run proving, the prover requires the inputs of the program.
 Inputs can be provides as a public URL, or "inline" by including them directly in the request.
@@ -326,6 +326,40 @@ In this example, inputs are included inline if they are small (e.g. less than 1 
 
 When submitting requests onchain with inline inputs, this will cost more gas if the inputs are large.
 The offchain order-stream service also places limits on the size of inline input.
+
+### Proof Types
+
+By default, the Boundless SDK requests [aggregated proofs](/developers/tutorials/use). However, you can also request Groth16 proofs, which are SNARK proofs that are highly efficient for onchain verification.
+
+#### Requesting a Groth16 Proof
+
+To request a Groth16 proof instead of the default aggregated proof, use the `with_groth16_proof()` method when building your request:
+
+{/* <StripRustCodeComments> */}
+```rust
+# use anyhow::Result;
+# use boundless_market::{Client};
+# async fn create_proof_request(
+# client: Client,
+# program: &'static [u8],
+# input: &[u8]) -> Result<()> {
+# let ECHO_ELF = program;
+# let echo_message = "Hello, world!";
+// Request an un-aggregated proof from the Boundless market using the ECHO guest.
+let echo_request = client
+    .new_request()
+    .with_program(ECHO_ELF)
+    .with_stdin(echo_message.as_bytes())
+    .with_groth16_proof(); // [!code hl] // [!code focus]
+
+// Submit the request onchain
+let (request_id, expires_at) = client.submit_onchain(echo_request).await?;
+# Ok(())
+# }
+```
+{/* </StripRustCodeComments> */}
+
+For a complete working example of requesting a Groth16 proof, see the [composition example](https://github.com/boundless-xyz/boundless/blob/main/examples/composition/apps/src/main.rs).
 
 ### Onchain vs Offchain
 
