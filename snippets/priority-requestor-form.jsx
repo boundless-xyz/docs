@@ -2,108 +2,91 @@ export const PriorityRequestorForm = () => {
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   return (
-    <div className="my-8 rounded-lg border border-amber-500/50 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-500/30 p-6">
-      <div className="flex items-start gap-3">
-        <div className="flex-shrink-0 mt-1">
-          <svg
-            className="w-5 h-5 text-amber-600 dark:text-amber-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
+    <div className="mb-8 rounded-lg border border-amber-500/50 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-500/30 p-6">
+      <div>
+        <h4 className="text-lg font-semibold text-amber-900 dark:text-amber-200 mb-2 -mt-0.5">
+          Priority Requestor List
+        </h4>
+        <div className="text-sm text-amber-800 dark:text-amber-300 space-y-3">
+          <p>
+            The team is aware of a higher than average expiration rate in the
+            market right now. We are investigating this issue currently; for
+            best performance, requestor addresses need to be added to the
+            dynamic priority lists (
+            <a
+              href="https://github.com/boundless-xyz/boundless/tree/main/requestor-lists"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-amber-900 dark:hover:text-amber-100 font-medium"
+            >
+              view on GitHub
+            </a>
+            ).
+          </p>
+          <p>
+            Please fill out the form below with your details. This will allow us
+            to consider your request and add you to the priority requestor list.
+            Thank you.
+          </p>
         </div>
-        <div className="flex-1">
-          <h4 className="text-lg font-semibold text-amber-900 dark:text-amber-200 mb-2">
-            Priority Requestor List
-          </h4>
-          <div className="text-sm text-amber-800 dark:text-amber-300 space-y-3">
-            <p>
-              The team is aware of a higher than average expiration rate in the
-              market right now. We are investigating this issue currently; for
-              best performance, requestor addresses need to be added to the
-              dynamic priority lists (
-              <a
-                href="https://github.com/boundless-xyz/boundless/tree/main/requestor-lists"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-amber-900 dark:hover:text-amber-100 font-medium"
-              >
-                view on GitHub
-              </a>
-              ).
-            </p>
-            <p>
-              Please fill out the form below with your details. This will allow
-              us to consider your request and add you to the priority requestor
-              list. Thank you.
-            </p>
-          </div>
 
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="mt-4 flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-amber-300 hover:text-amber-900 dark:hover:text-amber-100 transition-colors"
-          >
-            {isExpanded ? (
-              <>
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-                Hide Form
-              </>
-            ) : (
-              <>
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-                Show Form
-              </>
-            )}
-          </button>
-
-          {isExpanded && (
-            <div className="mt-4 rounded-lg overflow-hidden border border-amber-500/30 bg-white dark:bg-gray-900">
-              <iframe
-                src="https://docs.google.com/forms/d/e/1FAIpQLSc_15rCD5hl1rPXQmQ2NPVCEIO6aEHqMBN55tu8YJzDNCwEnQ/viewform?embedded=true"
-                width="100%"
-                height="986"
-                frameBorder="0"
-                marginHeight="0"
-                marginWidth="0"
-                className="w-full"
-                title="Priority Requestor Registration Form"
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="mt-4 flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-amber-300 hover:text-amber-900 dark:hover:text-amber-100 transition-colors"
+        >
+          {isExpanded ? (
+            <>
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                Loading…
-              </iframe>
-            </div>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+              Hide Form
+            </>
+          ) : (
+            <>
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+              Show Form
+            </>
           )}
-        </div>
+        </button>
+
+        {isExpanded && (
+          <div className="mt-4 rounded-lg overflow-hidden border border-amber-500/30 bg-white dark:bg-gray-900">
+            <iframe
+              src="https://docs.google.com/forms/d/e/1FAIpQLSc_15rCD5hl1rPXQmQ2NPVCEIO6aEHqMBN55tu8YJzDNCwEnQ/viewform?embedded=true"
+              width="100%"
+              height="986"
+              frameBorder="0"
+              marginHeight="0"
+              marginWidth="0"
+              className="w-full"
+              title="Priority Requestor Registration Form"
+            >
+              Loading…
+            </iframe>
+          </div>
+        )}
       </div>
     </div>
   );
