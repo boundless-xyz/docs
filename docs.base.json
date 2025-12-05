@@ -28,14 +28,15 @@
   "fonts": {
     "heading": {
       "family": "Self Modern",
-      "source": "/fonts/self-modern/SelfModernSemiBold.woff2",
-      "weight": 700,
-      "format": "woff2"
+      "source": "/fonts/SelfModernSemiBold.woff2",
+      "format": "woff2",
+      "weight": 700
     },
     "body": {
       "family": "Replica",
-      "source": "/fonts/replica/ReplicaRegular.woff2",
-      "format": "woff2"
+      "source": "/fonts/ReplicaRegular.woff2",
+      "format": "woff2",
+      "weight": 400
     }
   },
   "navbar": {
