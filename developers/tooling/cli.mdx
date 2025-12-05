@@ -4,6 +4,8 @@ description: An overview of the Boundless CLI for requestors, provers and claimi
 icon: terminal
 ---
 
+import { RELEASE_TAG } from '/snippets/release-version.mdx';
+
 ## Overview
 
 `boundless` is a command-line interface for interacting with the Boundless Market, specifically designed to help requestors and provers with common interactions
@@ -17,7 +19,7 @@ The Boundless CLI source code can be found at [boundless/crates/boundless-cli](h
 You'll need to [install Rust](https://doc.rust-lang.org/cargo/getting-started/installation.html), then you can run the following command to install the CLI.
 
 ```bash
-cargo install --locked --git https://github.com/boundless-xyz/boundless boundless-cli --branch release-1.1 --bin boundless
+cargo install --locked --git https://github.com/boundless-xyz/boundless boundless-cli --branch {RELEASE_TAG} --bin boundless
 ```
 
 ## Overview
