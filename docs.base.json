@@ -83,7 +83,7 @@
   "redirects": [
     {
       "source": "/",
-      "destination": "/developers/what"
+      "destination": "/developers/quick-start"
     }
   ]
 }

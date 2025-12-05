@@ -1,0 +1,46 @@
+name: Check Release Version
+
+on:
+  # Run on every push to main
+  push:
+    branches:
+      - main
+      - master
+
+  # Run on PRs
+  pull_request:
+    branches:
+      - main
+      - master
+
+  # Run daily at 9 AM UTC to catch new releases
+  schedule:
+    - cron: '0 9 * * *'
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Check version against boundless-xyz/boundless
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bun run scripts/check-version.ts
+
+      - name: Version check status
+        if: failure()
+        run: |
+          echo "::error::Documentation version is out of sync with boundless-xyz/boundless releases"
+          echo "::error::Please update snippets/release-version.mdx or run: bun run scripts/check-version.ts --auto-update"
