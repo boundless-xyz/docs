@@ -4,15 +4,36 @@ This repository contains the official documentation for Boundless, available at 
 
 ## Updating Release Tags
 
-**IMPORTANT:** When releasing a new version of Boundless, update the release tag in ONE place:
+The documentation uses an automated version management system to stay in sync with releases from [boundless-xyz/boundless](https://github.com/boundless-xyz/boundless).
 
-Edit [snippets/release-version.mdx](./snippets/release-version.mdx) and change the `RELEASE_TAG` value:
+### Automatic Updates
 
-```javascript
-export const RELEASE_TAG = "release-1.2"; // Update this value
+A GitHub Action runs daily to check for new releases and automatically creates a PR when one is detected. You can also manually trigger it from the Actions tab.
+
+### Manual Updates
+
+**Option 1: Auto-update to latest release**
+```bash
+bun run scripts/check-version.ts --auto-update
 ```
 
-This will automatically update all install commands and git checkout instructions across the entire documentation. Do NOT edit release tags in individual documentation files.
+**Option 2: Manual edit**
+Edit [snippets/release-version.mdx](./snippets/release-version.mdx) and change the `releaseTag` value:
+
+```javascript
+export const releaseTag = "release-1.2"; // Update this value
+```
+
+### How It Works
+
+1. The release version is stored in `snippets/release-version.mdx`
+2. Documentation files use `{{RELEASE_TAG}}` placeholders in code blocks
+3. During the build process, these placeholders are replaced with the actual version
+4. GitHub Actions automatically monitor for new releases and alert if the docs are out of sync
+
+**Do NOT edit release tags directly in individual documentation files.** Always update `snippets/release-version.mdx` or use the auto-update script.
+
+For more details, see [scripts/README.md](./scripts/README.md).
 
 ## Local Development
 

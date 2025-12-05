@@ -1,9 +1,9 @@
 #!/usr/bin/env bun
 /**
  * Build script for Mintlify docs.json
- * 
+ *
  * Merges docs.base.json + navigation.yaml → docs.json
- * 
+ *
  * Usage:
  *   bun run build-docs.ts
  *   bun run build-docs.ts --watch
@@ -71,11 +71,12 @@ async function buildDocs() {
     validateNavigation(navigation);
 
     // Build final navigation object
+    // IMPORTANT: Order matters! Global must come before tabs in the JSON
     const finalNav: Record<string, unknown> = {};
 
-    // Handle tabs
-    if (navigation.tabs) {
-      finalNav.tabs = navigation.tabs;
+    // Handle global config (anchors that appear everywhere) - must be first
+    if (navigation.global) {
+      finalNav.global = navigation.global;
     }
 
     // Handle root-level anchors (alternative to tabs)
@@ -83,9 +84,9 @@ async function buildDocs() {
       finalNav.anchors = navigation.anchors;
     }
 
-    // Handle global config (anchors that appear everywhere)
-    if (navigation.global) {
-      finalNav.global = navigation.global;
+    // Handle tabs
+    if (navigation.tabs) {
+      finalNav.tabs = navigation.tabs;
     }
 
     // Merge into base config
@@ -97,12 +98,14 @@ async function buildDocs() {
 
     const elapsed = (performance.now() - startTime).toFixed(2);
     console.log(`✅ Generated ${CONFIG.output} (${elapsed}ms)`);
-    
+
     // Print navigation summary
     printNavSummary(navigation);
-
   } catch (error) {
-    console.error("❌ Build failed:", error instanceof Error ? error.message : error);
+    console.error(
+      "❌ Build failed:",
+      error instanceof Error ? error.message : error,
+    );
     process.exit(1);
   }
 }
@@ -133,7 +136,9 @@ function validateNavigation(nav: Navigation) {
   }
 
   if (errors.length > 0) {
-    throw new Error(`Navigation validation failed:\n  - ${errors.join("\n  - ")}`);
+    throw new Error(
+      `Navigation validation failed:\n  - ${errors.join("\n  - ")}`,
+    );
   }
 }
 
@@ -158,9 +163,9 @@ function printNavSummary(nav: Navigation) {
 // Watch mode
 if (process.argv.includes("--watch")) {
   console.log("👀 Watching for changes...\n");
-  
+
   await buildDocs();
-  
+
   for (const file of [CONFIG.baseJson, CONFIG.navYaml]) {
     watch(file, async (event) => {
       if (event === "change") {

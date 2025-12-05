@@ -1,117 +1,99 @@
 # Boundless Documentation Navigation
-# Run: bun run build-docs.ts to merge this with docs.base.json to create docs.json
+# Run: `bun run scripts/build-docs.ts` to merge this with docs.base.json to create docs.json
+
+global:
+  anchors:
+    - anchor: Latest Release Notes
+      icon: notes
+      href: https://github.com/boundless-xyz/boundless/releases
 
 tabs:
   - tab: Build
-    anchors:
-      - anchor: Quick Start
-        icon: rocket
-        groups:
-          - group: " "
-            pages:
-              - developers/quick-start
+    groups:
+      - group: " "
+        pages:
+          - developers/quick-start
 
-      - anchor: Introduction
+      - group: Introduction
         icon: book-open
-        groups:
-          - group: "Introduction"
-            pages:
-              - developers/what
-              - developers/why
-              - developers/proof-lifecycle
+        pages:
+          - developers/what
+          - developers/why
+          - developers/proof-lifecycle
 
-      - anchor: Core Concepts
+      - group: Core Concepts
         icon: cube
-        groups:
-          - group: "Core Concepts"
-            pages:
-              - developers/tutorials/build
-              - developers/tutorials/auction
-              - developers/tutorials/request
-              - developers/tutorials/tracking
-              - developers/tutorials/use
-              - developers/tutorials/troubleshooting
+        pages:
+          - developers/tutorials/build
+          - developers/tutorials/auction
+          - developers/tutorials/request
+          - developers/tutorials/tracking
+          - developers/tutorials/use
+          - developers/tutorials/troubleshooting
 
-      - anchor: Tooling
+      - group: Tooling
         icon: wrench
-        groups:
-          - group: "Tooling"
-            pages:
-              - developers/tooling/sdk
-              - developers/tooling/cli
+        pages:
+          - developers/tooling/sdk
+          - developers/tooling/cli
 
-      - anchor: Tutorials
+      - group: Tutorials
         icon: graduation-cap
-        groups:
-          - group: "Tutorials"
-            pages:
-              - developers/tutorials/callbacks
-              - developers/tutorials/proof-composition
-              - developers/tutorials/proof-types
-              - developers/tutorials/bonsai
-              - developers/tutorials/sensitive-inputs
-              - developers/tutorials/smart-contract-requestor
+        pages:
+          - developers/tutorials/callbacks
+          - developers/tutorials/proof-composition
+          - developers/tutorials/proof-types
+          - developers/tutorials/bonsai
+          - developers/tutorials/sensitive-inputs
+          - developers/tutorials/smart-contract-requestor
 
-      - anchor: Smart Contracts
+      - group: Smart Contracts
         icon: file-contract
-        groups:
-          - group: "Smart Contracts"
-            pages:
-              - developers/smart-contracts/deployments
-              - developers/smart-contracts/verifier-contracts
+        pages:
+          - developers/smart-contracts/deployments
+          - developers/smart-contracts/verifier-contracts
 
-      - anchor: Steel
+      - group: Steel
         icon: shield
-        groups:
-          - group: "Steel"
-            pages:
-              - developers/steel/quick-start
-              - developers/steel/what-is-steel
-              - developers/steel/how-it-works
-              - developers/steel/commitments
-              - developers/steel/history
-              - developers/steel/events
+        pages:
+          - developers/steel/quick-start
+          - developers/steel/what-is-steel
+          - developers/steel/how-it-works
+          - developers/steel/commitments
+          - developers/steel/history
+          - developers/steel/events
 
-      - anchor: Kailua
+      - group: Kailua
         icon: water
-        groups:
-          - group: "Kailua"
-            pages:
-              - developers/kailua/intro
+        pages:
+          - developers/kailua/intro
 
   - tab: Prove
-    anchors:
-      - anchor: Quick Start
-        icon: rocket
+    groups:
+      - group: " "
         pages:
           - provers/quick-start
 
-      - anchor: Core Concepts
+      - group: Core Concepts
         icon: gear
-        groups:
-          - group: "Core Concepts"
-            pages:
-              - provers/proving-stack
-              - provers/broker
-              - provers/monitoring
-              - provers/performance-optimization
-              - provers/bento
+        pages:
+          - provers/proving-stack
+          - provers/broker
+          - provers/monitoring
+          - provers/performance-optimization
+          - provers/bento
 
-      - anchor: $ZKC Overview
+      - group: $ZKC Overview
         icon: coins
-        groups:
-          - group: "$ZKC Overview"
-            pages:
-              - zkc/quick-start
-              - zkc/collateral
+        pages:
+          - zkc/quick-start
+          - zkc/collateral
 
-      - anchor: ZK Mining
+      - group: ZK Mining
         icon: pickaxe
-        groups:
-          - group: "ZK Mining"
-            pages:
-              - zkc/mining/overview
-              - zkc/mining/wallet-setup
-              - zkc/mining/enable
-              - zkc/mining/walkthrough
-              - zkc/mining/claiming-rewards
+        pages:
+          - zkc/mining/overview
+          - zkc/mining/wallet-setup
+          - zkc/mining/enable
+          - zkc/mining/walkthrough
+          - zkc/mining/claiming-rewards

@@ -1,0 +1,33 @@
+name: Build Documentation
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Inject release version into docs
+        run: |
+          bun run scripts/inject-version.ts
+
+      - name: Build docs.json
+        run: |
+          bun run scripts/build-docs-json.ts
