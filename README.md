@@ -4,13 +4,9 @@ This repository contains the official documentation for Boundless, available at 
 
 ## Updating Release Tags
 
-The documentation uses an automated version management system to stay in sync with releases from [boundless-xyz/boundless](https://github.com/boundless-xyz/boundless).
+The documentation uses a version management system to stay in sync with releases from [boundless-xyz/boundless](https://github.com/boundless-xyz/boundless).
 
-### Automatic Updates
-
-A GitHub Action runs daily to check for new releases and automatically creates a PR when one is detected. You can also manually trigger it from the Actions tab.
-
-### Manual Updates
+### Updating the Version
 
 **Option 1: Auto-update to latest release**
 ```bash
@@ -29,7 +25,7 @@ export const releaseTag = "release-1.2"; // Update this value
 1. The release version is stored in `snippets/release-version.mdx`
 2. Documentation files use `{{RELEASE_TAG}}` placeholders in code blocks
 3. During the build process, these placeholders are replaced with the actual version
-4. GitHub Actions automatically monitor for new releases and alert if the docs are out of sync
+4. A GitHub Action checks for new releases and alerts if the docs are out of sync
 
 **Do NOT edit release tags directly in individual documentation files.** Always update `snippets/release-version.mdx` or use the auto-update script.
 

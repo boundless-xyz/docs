@@ -60,7 +60,7 @@ The documentation uses an automated version management system to stay in sync wi
 
 3. **Build-Time Injection**: Before building, `inject-version.ts` replaces all placeholders with the actual version.
 
-4. **Automated Checks**: GitHub Actions monitor for new releases and can automatically create PRs to update the version.
+4. **Automated Checks**: A GitHub Action checks for new releases and alerts if the docs are out of sync.
 
 ### GitHub Actions Workflows
 
@@ -76,18 +76,6 @@ Runs on every push, PR, and daily at 9 AM UTC. Validates that the docs version m
 **Behavior:**
 - Fails the build if version is outdated
 - Provides instructions on how to update
-
-#### `auto-update-version.yml`
-Automatically creates a PR when a new release is detected.
-
-**Triggers:**
-- Daily schedule (9 AM UTC)
-- Manual dispatch
-
-**Behavior:**
-- Checks for new releases from `boundless-xyz/boundless`
-- Auto-updates `snippets/release-version.mdx`
-- Creates a PR with the changes
 
 #### `build-docs.yml`
 Builds the documentation with version injection.
