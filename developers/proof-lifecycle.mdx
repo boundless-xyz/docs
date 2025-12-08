@@ -7,7 +7,7 @@ icon: recycle
 
 On this page, the entirety of a proof's lifetime in the Boundless Market is covered; starting from a proof request to bid submission and lock in by a prover, through to proof submission and finally to proof verification.
 
-This overview is aimed at app developers i.e., requestors, and therefore for simplicity, it will abstract some complexity away from the specifics of provers. This will be covered in its entirety at a later stage for public access testnet.
+This overview is aimed at app developers i.e., requestors, and therefore for simplicity, it will abstract some complexity away from the specifics of provers. This will be covered in its entirety at a later stage.
 
 <Frame caption="Figure 1: A process diagram following the lifecycle of a proof chronologically in the Boundless Market.">
   <img src="/images/proof-lifecycle.png" alt="The lifecycle of a Boundless Proof" />
@@ -152,9 +152,9 @@ In order to fulfill a batch of requests, and receive payment, the prover provide
 
 When the prover submits the aggregated proof, the Market contract verifies it and pays the prover if all conditions are met. At the same time, the contract emits an event that signals to the requestor that their request is fulfilled, and provides the Merkle inclusion proof.
 
-:::note[Note]
+<Note>
 The requestor can use this Merkle inclusion proof as an effective representation of a verified execution, and use it as such in their application.
-:::
+</Note>
 
 ### 5. The App Developer Retrieves Their Proof, to Use in Their Application
 

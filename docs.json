@@ -152,7 +152,10 @@
             "icon": "file-contract",
             "pages": [
               "developers/smart-contracts/deployments",
-              "developers/smart-contracts/verifier-contracts"
+              {
+                "title": "Verifier Contracts",
+                "href": "https://dev.risczero.com/api/blockchain-integration/contracts/verifier"
+              }
             ]
           },
           {
