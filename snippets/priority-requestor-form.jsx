@@ -9,24 +9,9 @@ export const PriorityRequestorForm = () => {
         </h4>
         <div className="text-sm text-amber-800 dark:text-amber-300 space-y-3">
           <p>
-            The team is aware of a higher than average expiration rate in the
-            market right now. We are investigating this issue currently; for
-            best performance, requestor addresses need to be added to the
-            dynamic priority lists (
-            <a
-              href="https://github.com/boundless-xyz/boundless/tree/main/requestor-lists"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:text-amber-900 dark:hover:text-amber-100 font-medium"
-            >
-              view on GitHub
-            </a>
-            ).
-          </p>
-          <p>
-            Please fill out the form below with your details. This will allow us
-            to consider your request and add you to the priority requestor list.
-            Thank you.
+            For the best experience, we offer a priority requestor list that
+            provides optimal performance for proof requests. Fill out the form
+            below to be considered for testing credits and priority access.
           </p>
         </div>
 
