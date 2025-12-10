@@ -51,8 +51,7 @@ tabs:
         icon: file-contract
         pages:
           - developers/smart-contracts/deployments
-          - title: Verifier Contracts
-            href: https://dev.risczero.com/api/blockchain-integration/contracts/verifier
+          - developers/smart-contracts/verifier-contracts
 
       - group: Steel
         icon: shield
