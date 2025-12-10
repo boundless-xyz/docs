@@ -24,10 +24,6 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Inject release version into docs
-        run: |
-          bun run scripts/inject-version.ts
-
       - name: Build docs.json
         run: |
           bun run scripts/build-docs-json.ts
