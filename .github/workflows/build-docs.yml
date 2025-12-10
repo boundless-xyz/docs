@@ -25,5 +25,7 @@ jobs:
           bun-version: latest
 
       - name: Build docs.json
-        run: |
-          bun run scripts/build-docs-json.ts
+        run: bun run scripts/build-docs-json.ts
+
+      - name: Check docs.json is in sync
+        run: git diff --exit-code docs.json
