@@ -35,7 +35,7 @@ This directory contains automated workflows for the Boundless documentation.
 **Note:** Requires repository permissions for `contents: write` and `pull-requests: write`
 
 ### `build-docs.yml` - Documentation Build
-**Purpose:** Builds documentation with proper version injection
+**Purpose:** Builds documentation configuration
 
 **Triggers:**
 - Push to main/master
@@ -43,9 +43,8 @@ This directory contains automated workflows for the Boundless documentation.
 - Manual dispatch
 
 **Steps:**
-1. Injects release version into MDX files (`{{RELEASE_TAG}}` → actual version)
-2. Builds `docs.json` from base config and navigation YAML
-3. Ready for deployment step (customize as needed)
+1. Builds `docs.json` from base config and navigation YAML
+2. Ready for deployment step (customize as needed)
 
 ## Manual Workflow Triggers
 

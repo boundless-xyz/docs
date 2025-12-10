@@ -135,10 +135,10 @@ async function getCurrentVersion(): Promise<string> {
   const snippetPath = join(projectRoot, "snippets/release-version.mdx");
   const content = await readFile(snippetPath, "utf8");
 
-  const match = content.match(/releaseTag\s*=\s*"([^"]+)"/);
+  const match = content.match(/RELEASE_TAG\s*=\s*"([^"]+)"/);
   if (!match) {
     throw new Error(
-      "Could not find releaseTag in snippets/release-version.mdx",
+      "Could not find RELEASE_TAG in snippets/release-version.mdx",
     );
   }
 
@@ -150,8 +150,8 @@ async function updateVersion(newVersion: string): Promise<void> {
   const content = await readFile(snippetPath, "utf8");
 
   const updatedContent = content.replace(
-    /releaseTag\s*=\s*"[^"]+"/,
-    `releaseTag = "${newVersion}"`,
+    /RELEASE_TAG\s*=\s*"[^"]+"/,
+    `RELEASE_TAG = "${newVersion}"`,
   );
 
   await writeFile(snippetPath, updatedContent);
