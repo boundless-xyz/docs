@@ -66,7 +66,8 @@ tabs:
       - group: Kailua
         icon: water
         pages:
-          - developers/kailua/intro
+          - developers/kailua/github
+          - developers/kailua/book
 
   - tab: Prove
     groups:
