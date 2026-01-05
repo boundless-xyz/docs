@@ -54,26 +54,26 @@
 
   function watchPageTitle() {
     let lastTitle = '';
+    
     const pageTitle = document.getElementById('page-title');
 
     if (pageTitle) {
       lastTitle = pageTitle.textContent;
     }
 
-    // Watch the entire document body for changes to page-title
-    observer = new MutationObserver(function(mutations) {
+    observer = new MutationObserver(function() {
       const currentPageTitle = document.getElementById('page-title');
+
       if (currentPageTitle) {
         const currentTitle = currentPageTitle.textContent;
+
         if (currentTitle !== lastTitle) {
-          console.log('page title changed from', lastTitle, 'to', currentTitle);
           lastTitle = currentTitle;
           initGiscus();
         }
       }
     });
 
-    // Observe the body or main content area for all changes
     observer.observe(document.body, {
       childList: true,
       characterData: true,
