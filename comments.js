@@ -1,9 +1,17 @@
 (function() {
+  let giscusContainer = null;
+  let observer = null;
+
   // Wait for DOM to be ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initGiscus);
+    document.addEventListener('DOMContentLoaded', init);
   } else {
+    init();
+  }
+
+  function init() {
     initGiscus();
+    watchPageTitle();
   }
 
   function initGiscus() {
@@ -13,6 +21,15 @@
       console.warn('pagination element not found, skipping Giscus initialization');
       return;
     }
+
+    // Remove existing Giscus widget if present
+    if (giscusContainer) {
+      giscusContainer.remove();
+    }
+
+    // Create container for Giscus
+    giscusContainer = document.createElement('div');
+    giscusContainer.className = 'giscus-container';
 
     const script = document.createElement('script');
     script.src = 'https://giscus.app/client.js';
@@ -31,6 +48,36 @@
     script.setAttribute('crossorigin', 'anonymous');
     script.async = true;
 
-    pagination.insertAdjacentElement('afterend', script);
+    giscusContainer.appendChild(script);
+    pagination.insertAdjacentElement('afterend', giscusContainer);
+  }
+
+  function watchPageTitle() {
+    let lastTitle = '';
+    
+    const pageTitle = document.getElementById('page-title');
+
+    if (pageTitle) {
+      lastTitle = pageTitle.textContent;
+    }
+
+    observer = new MutationObserver(function() {
+      const currentPageTitle = document.getElementById('page-title');
+
+      if (currentPageTitle) {
+        const currentTitle = currentPageTitle.textContent;
+
+        if (currentTitle !== lastTitle) {
+          lastTitle = currentTitle;
+          initGiscus();
+        }
+      }
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      characterData: true,
+      subtree: true
+    });
   }
 })();
