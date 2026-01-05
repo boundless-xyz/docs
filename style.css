@@ -53,3 +53,7 @@ a:has(> .nav-logo)::after {
 #footer div:last-child {
   display: none;
 }
+
+.giscus {
+  margin-top: 24px;
+}
