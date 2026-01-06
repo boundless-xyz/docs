@@ -528,3 +528,131 @@ let client = Client::builder()
 {/* </StripRustCodeComments> */}
 
 With this configuration, the SDK will execute the request to estimate cycles and calculate appropriate prices.
+
+### Funding Modes
+
+When submitting requests onchain, the Boundless Market SDK needs to fund the request with ETH to cover the `max_price` of the proof. The SDK provides several funding modes to control how this funding is handled, allowing you to optimize gas costs and manage your onchain balance efficiently.
+
+The funding mode can be configured when building the client using `with_funding_mode`:
+
+{/* <StripRustCodeComments> */}
+```rust
+# use anyhow::Result;
+# use alloy::signers::local::PrivateKeySigner;
+# use alloy::primitives::{U256, utils::parse_ether};
+# use boundless_market::{Client, client::FundingMode, storage::storage_provider_from_env};
+# use url::Url;
+# #[derive(Clone)]
+# struct Args {
+#     rpc_url: Url,
+#     private_key: PrivateKeySigner,
+#     storage_config: String,
+# }
+# async fn create_boundless_client() -> Result<(), Box<dyn std::error::Error>> {
+# let args = Args {
+#     rpc_url: "https://example.com".parse()?,
+#     private_key: "0x0000000000000000000000000000000000000000000000000000000000000001".parse()?,
+#     storage_config: "mock".to_string(),
+# };
+let client = Client::builder()
+  .with_rpc_url(args.rpc_url)
+  .with_private_key(args.private_key)
+  .with_storage_provider(Some(storage_provider_from_env()?))
+  .with_funding_mode(FundingMode::Always) // [!code hl] // [!code focus]
+  .build()
+  .await?;
+# Ok(())
+# }
+```
+{/* </StripRustCodeComments> */}
+
+#### Always (Default)
+
+The `Always` mode always sends `max_price` as the transaction value with each request. This is the simplest mode and ensures your requests are always fully funded.
+
+{/* <StripRustCodeComments> */}
+```rust
+# use boundless_market::client::FundingMode;
+let funding_mode = FundingMode::Always;
+```
+{/* </StripRustCodeComments> */}
+
+<Tip>
+If your balance is more than 3x the `max_price`, the SDK will log a warning suggesting you consider a different funding mode to avoid overfunding.
+</Tip>
+
+#### Never
+
+The `Never` mode never sends value with the request. Use this mode only if you are managing the onchain balance through other means (e.g., manual top-ups, external funding management).
+
+{/* <StripRustCodeComments> */}
+```rust
+# use boundless_market::client::FundingMode;
+let funding_mode = FundingMode::Never;
+```
+{/* </StripRustCodeComments> */}
+
+<Warning>
+When using `Never` mode, you must ensure your onchain balance is sufficient to cover the `max_price` of each request. Otherwise, requests may fail.
+</Warning>
+
+#### AvailableBalance
+
+The `AvailableBalance` mode uses the available onchain balance for funding the request. If the balance is insufficient, only the difference will be sent as value.
+
+{/* <StripRustCodeComments> */}
+```rust
+# use boundless_market::client::FundingMode;
+let funding_mode = FundingMode::AvailableBalance;
+```
+{/* </StripRustCodeComments> */}
+
+This mode is useful when you want to minimize the amount of ETH sent with each transaction while ensuring requests are properly funded.
+
+#### BelowThreshold
+
+The `BelowThreshold` mode sends value only if the balance is below a configurable threshold. If the balance is below the threshold, the difference will be sent as value (up to `max_price`).
+
+{/* <StripRustCodeComments> */}
+```rust
+# use anyhow::Result;
+# use alloy::primitives::utils::parse_ether;
+# use boundless_market::client::FundingMode;
+# async fn configure_threshold() -> Result<FundingMode> {
+let threshold = parse_ether("0.1")?; // 0.1 ETH
+let funding_mode = FundingMode::BelowThreshold(threshold);
+# Ok(funding_mode)
+# }
+```
+{/* </StripRustCodeComments> */}
+
+<Tip>
+Set the threshold appropriately to avoid underfunding. The threshold should be at least as large as your typical `max_price` to ensure requests can be funded when needed.
+</Tip>
+
+#### MinMaxBalance
+
+The `MinMaxBalance` mode maintains a minimum and maximum balance by funding requests accordingly. If the balance is below `min_balance`, the request will be funded to bring the balance up to `max_balance` (or to cover `max_price`, whichever is greater).
+
+{/* <StripRustCodeComments> */}
+```rust
+# use anyhow::Result;
+# use alloy::primitives::utils::parse_ether;
+# use boundless_market::client::FundingMode;
+# async fn configure_min_max() -> Result<FundingMode> {
+let min_balance = parse_ether("0.05")?;  // 0.05 ETH minimum
+let max_balance = parse_ether("0.2")?;   // 0.2 ETH maximum
+let funding_mode = FundingMode::MinMaxBalance {
+    min_balance,
+    max_balance,
+};
+# Ok(funding_mode)
+# }
+```
+{/* </StripRustCodeComments> */}
+
+This mode should minimize the number of onchain fundings while ensuring sufficient balance is maintained. It's ideal for applications that make frequent requests and want to optimize gas costs by reducing the number of funding transactions.
+
+<Tip>
+When the balance drops below `min_balance`, the SDK will fund up to `max_balance` in a single transaction, reducing the need for frequent top-ups.
+</Tip>
