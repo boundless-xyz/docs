@@ -49,3 +49,11 @@ a:has(> .nav-logo)::after {
 .dark a:has(> .nav-logo)::after {
   color: rgb(var(--gray-400));
 }
+
+#footer div:last-child {
+  display: none;
+}
+
+.giscus {
+  margin-top: 24px;
+}

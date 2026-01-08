@@ -25,16 +25,7 @@ While merkle inclusion proofs are efficient for on-chain verification, there may
 
 Boundless supports requesting a raw Groth16 proof instead of a merkle inclusion proof. You can specify this in your proof request by setting the `proof_type` to `ProofType::Groth16`:
 
-{/* <StripRustCodeComments> */}
 ```rust
-# use alloy_primitives::utils::parse_ether;
-# use boundless_market::{Client, request_builder::OfferParams};
-# use url::Url;
-# async fn create_groth16_request(
-#     client: Client,
-#     program: &'static [u8],
-#     input: &[u8]
-# ) -> anyhow::Result<()> {
 let request = client.new_request()
     .with_program(program)
     .with_stdin(input)
@@ -46,10 +37,7 @@ let request = client.new_request()
             .timeout(1000)
             .lock_timeout(1000)
     );
-# Ok(())
-# }
 ```
-{/* </StripRustCodeComments> */}
 
 In addition, Boundless also supports requesting a Blake3 Groth16 proof. This proof type allows for proofs to be verified in environments where SHA2 hashing is impossible or expensive (e.g. BitVM). You can specify this in your proof request by setting the `proof_type` to  `ProofType::Blake3Groth16`:
 Note: Blake3 Groth16 proofs are only supported with the `ClaimDigestMatch` predicate, meaning that you should only use this if you do not require the journal to be delivered on-chain. Blake3 Groth16 proofs also require the journal to be of size 32 bytes.
@@ -117,16 +105,7 @@ Composing a proof requires us to verify a previously generated Groth16 proof wit
 
 
 In the composition example, we first request a raw Groth16 proof from the Boundless Market using the `ECHO` guest program.
-{/* <StripRustCodeComments> */}
 ```rust
-# use alloy_primitives::utils::parse_ether;
-# use boundless_market::{Client, request_builder::OfferParams};
-# use url::Url;
-# async fn create_groth16_request(
-#     client: Client,
-#     program: &'static [u8],
-#     input: &[u8]
-# ) -> anyhow::Result<()> {
 let request = client.new_request()
     .with_program(program)
     .with_stdin(input)
@@ -138,14 +117,10 @@ let request = client.new_request()
             .timeout(1000)
             .lock_timeout(1000)
     );
-# Ok(())
-# }
 ```
-{/* </StripRustCodeComments> */}
 
 We then provide the Groth16 proof as input to the `IDENTITY` zkVM guest program, and verify the proof.
 
-{/* <StripRustCodeComments> */}
 ```rust
 use risc0_zkvm::guest::env;
 use risc0_zkvm::{Digest, Receipt};
@@ -157,4 +132,3 @@ fn main() {
     ....
 }
 ```
-{/* </StripRustCodeComments> */}
