@@ -52,7 +52,7 @@ let request = client.new_request()
 {/* </StripRustCodeComments> */}
 
 In addition, Boundless also supports requesting a Blake3 Groth16 proof. This proof type allows for proofs to be verified in environments where SHA2 hashing is impossible or expensive (e.g. BitVM). You can specify this in your proof request by setting the `proof_type` to  `ProofType::Blake3Groth16`:
-Note: Blake3 Groth16 proofs require is only supported with the `ClaimDigestMatch` predicate, meaning that you should only use this if you do not require the journal to be delivered on-chain. 
+Note: Blake3 Groth16 proofs are only supported with the `ClaimDigestMatch` predicate, meaning that you should only use this if you do not require the journal to be delivered on-chain. Blake3 Groth16 proofs also require the journal to be of size 32 bytes.
 {/* <StripRustCodeComments> */}
 ```rust
 # use alloy_primitives::utils::parse_ether;
@@ -91,14 +91,23 @@ When choosing between proof types, consider:
    - If you only need on-chain verification, use the default merkle inclusion proof
    - If you need cross-chain verification or raw proof data, use Groth16
    - If you need to compose the proof by verifying it within another zkVM guest program, use Groth16
-   - If you don't need the journal to be authenticated, consider using the ClaimDigestMatch predicate
+   - If you don't need the journal on-chain, consider using `ClaimDigestMatch` to save gas (see [Journal Delivery](#journal-delivery-onchain))
+   - If your journal size exceeds 10KB, use `ClaimDigestMatch` and design your application to store journals off-chain (see [Journal Size Limits](#journal-size-limits))
 
-### Predicate Types
-When constructing a Proof Request, we can set a `Requirement` with some predicate type. The available predicate types are `DigestMatch`, `PrefixMatch`, and `ClaimDigestMatch`. 
-These predicates ensure that the journal of our guest program match what we expect. 
-Specifying the `DigestMatch` and `PrefixMatch` predicates will require delivery of the journal when a request is being fulfilled. 
-There are times where we are building an application that does not require the journal to be delivered on-chain.
-If this is the case, `ClaimDigestMatch` will save potentially a lot of gas, since Provers will not need to submit potentially large journals on-chain.
+### Journal Delivery Onchain
+
+When a proof request is fulfilled, the journal can optionally be delivered on-chain. This is controlled by the predicate type you specify in your `Requirement`:
+
+- **`DigestMatch` / `PrefixMatch`**: Require the journal to be delivered on-chain when the request is fulfilled.
+- **`ClaimDigestMatch`**: Does not require journal delivery. Only the claim digest is verified on-chain.
+
+If your application doesn't need the journal on-chain, using `ClaimDigestMatch` can lead to lower prices since provers won't need to submit potentially large journal data.
+
+#### Journal Size Limits
+
+To prevent griefing attacks where requestors force provers to post expensive amounts of calldata on-chain, there is a **10KB limit** on journal size for on-chain delivery. Provers will ignore requests that require journals larger than 10KB to be posted on-chain.
+
+If your journal exceeds 10KB, use `ClaimDigestMatch` and design your application to store journals off-chain (e.g. via IPFS, a blob storage service, or your own backend).
 
 ## Example: Proof Composition using Proof Types
 
