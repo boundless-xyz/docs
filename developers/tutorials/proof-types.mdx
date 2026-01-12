@@ -4,7 +4,6 @@ description: Boundless supports different types of proof delivery, from efficien
 icon: file-pen
 ---
 
-
 ## Default: Merkle Inclusion Proofs
 
 By default, Boundless delivers proofs on-chain as merkle inclusion proofs:
@@ -15,13 +14,17 @@ By default, Boundless delivers proofs on-chain as merkle inclusion proofs:
 
 This design is what makes Boundless cost-effective for on-chain verification.
 
-## Requesting a specific proof type
+## Options: Requesting a Specific Proof Type
 
-While merkle inclusion proofs are efficient for on-chain verification, there may be cases where you need to access the underlying proof instead of a merkle inclusion proof. For example:
+While Merkle inclusion proofs are efficient for on-chain verification, there may be cases where you need to access the underlying proof instead of a merkle inclusion proof.
 
-1. Cross-chain verification where you need to verify the proof on a different chain
-2. Integration with other systems that expect a specific proof type
-3. Custom verification logic that requires the full proof
+For example:
+
+1. Cross-chain verification where you need to verify the proof on a different chain.
+2. Integration with other systems that expect a specific proof type.
+3. Custom verification logic that requires the full proof.
+
+### Request a Groth16 Proof
 
 Boundless supports requesting a raw Groth16 proof instead of a merkle inclusion proof. You can specify this in your proof request by setting the `proof_type` to `ProofType::Groth16`:
 
@@ -39,8 +42,17 @@ let request = client.new_request()
     );
 ```
 
-In addition, Boundless also supports requesting a Blake3 Groth16 proof. This proof type allows for proofs to be verified in environments where SHA2 hashing is impossible or expensive (e.g. BitVM). You can specify this in your proof request by setting the `proof_type` to  `ProofType::Blake3Groth16`:
-Note: Blake3 Groth16 proofs are only supported with the `ClaimDigestMatch` predicate, meaning that you should only use this if you do not require the journal to be delivered on-chain. Blake3 Groth16 proofs also require the journal to be of size 32 bytes.
+### Request a Blake3 Groth16 Proof
+
+<Note>
+  Blake3 Groth16 proofs are only supported with the `ClaimDigestMatch`
+  predicate, meaning that you should only use this if you do not require the
+  journal to be delivered on-chain. Blake3 Groth16 proofs also require the
+  journal to be of size 32 bytes.
+</Note>
+
+Boundless supports requesting a Blake3 Groth16 proof. This proof type allows for proofs to be verified in environments where SHA2 hashing is impossible or expensive (e.g. BitVM). You can specify this in your proof request by setting the `proof_type` to `ProofType::Blake3Groth16`:
+
 ```rust
 let request = client
     .new_request()
@@ -92,8 +104,8 @@ In the [Proof Composition example](https://github.com/boundless-xyz/boundless/tr
 
 Composing a proof requires us to verify a previously generated Groth16 proof within the zkVM guest program. This requires us to request a raw Groth16 proof from the Boundless Market.
 
-
 In the composition example, we first request a raw Groth16 proof from the Boundless Market using the `ECHO` guest program.
+
 ```rust
 let request = client.new_request()
     .with_program(program)
