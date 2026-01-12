@@ -84,6 +84,11 @@ tabs:
           - provers/performance-optimization
           - provers/bento
 
+      - group: Tooling
+        icon: wrench
+        pages:
+          - provers/cli
+
       - group: $ZKC Overview
         icon: coins
         pages:
