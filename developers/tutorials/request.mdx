@@ -241,6 +241,24 @@ let (request_id, expires_at) = client.submit_onchain(echo_request).await?;
 
 For a complete working example of requesting a Groth16 proof, see the [composition example](https://github.com/boundless-xyz/boundless/blob/main/examples/composition/apps/src/main.rs).
 
+#### Requesting a Blake3 Groth16 Proof
+
+Blake3 Groth16 proofs allow verification in environments where SHA2 hashing is impossible or expensive (e.g. BitVM). To request a Blake3 Groth16 proof, use the `with_blake3_groth16_proof()` method:
+
+```rust
+let request = client
+    .new_request()
+    .with_program(program)
+    .with_stdin(input)
+    .with_blake3_groth16_proof(); // [!code hl] // [!code focus]
+```
+
+<Note>
+Blake3 Groth16 proofs are only supported with the `ClaimDigestMatch` predicate, meaning you should only use this if you do not require the journal to be delivered on-chain. Additionally, the journal must be exactly 32 bytes.
+</Note>
+
+For more details on proof types and when to use each, see [Proof Types](/developers/tutorials/proof-types).
+
 ### Onchain vs Offchain
 
 The Boundless protocol allows you to submit requests both onchain and offchain.
