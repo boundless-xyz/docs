@@ -10,8 +10,8 @@ export const PriorityRequestorForm = () => {
         <div className="text-sm text-amber-800 dark:text-amber-300 space-y-3">
           <p>
             For the best experience, we offer a priority requestor list that
-            provides optimal performance for proof requests. Fill out the form
-            below to be considered for testing credits and priority access.
+            provides optimal performance for requestors looking to go to production. Fill out the form
+            below to be considered for developer assistance.
           </p>
         </div>
 
