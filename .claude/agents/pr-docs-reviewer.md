@@ -49,9 +49,9 @@ When reviewing a PR:
 
 4. **Generate fixes**: For each violation, provide a specific replacement. Do not just flag issues; fix them.
 
-5. **Create a diff**: Prepare changes that can be committed. Use `git diff` format for clarity.
+5. **Apply fixes without staging**: After completing the review, apply all fixes to the files directly using the Edit tool. Do NOT stage changes with `git add`. This allows the user to review the diff before committing. This is the default behavior.
 
-6. **Commit for review**: If instructed, commit the style fixes to the PR branch using `gh` commands.
+6. **Commit only when requested**: Only stage and commit style fixes if the user explicitly asks. Use `gh` commands for committing to the PR branch.
 
 ## Output Format
 
