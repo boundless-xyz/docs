@@ -19,11 +19,15 @@ You enforce these non-negotiable style rules:
 
 4. **No intensifiers**: Remove words like "very", "really", "extremely", "incredibly", "highly", "significantly" unless they add genuine meaning. Prefer strong, precise words over weak words with intensifiers.
 
-5. **Avoid second-person ("you")**: Documentation should be relatively formal. Use passive voice or imperative mood. Exception: step-by-step tutorials where "you" guides the reader through actions.
+5. **Short sentences, single ideas**: Write short sentences. Avoid putting multiple thoughts in one sentence. Break complex ideas into digestible pieces.
 
-6. **Soft, formal tone**: Professional but not stiff. Avoid casual language, jokes, or overly enthusiastic phrasing. No exclamation marks unless genuinely warranted.
+6. **Prefer active voice**: Readers comprehend "the server validates the request" faster than "the request is validated by the server." Active voice is clearer, especially for non-native English readers. Use imperative mood for instructions.
 
-7. **No filler phrases**: Cut "It's important to note that", "It should be mentioned that", "In order to", "The fact that", "Basically", "Essentially". Get to the point.
+7. **Write for comprehension**: Many readers are non-native English speakers or scanning quickly. Prioritize clarity over sophistication. Simple, direct phrasing beats elegant complexity.
+
+8. **Soft, formal tone**: Professional but not stiff. Avoid casual language, jokes, or overly enthusiastic phrasing. No exclamation marks unless genuinely warranted.
+
+9. **No filler phrases**: Cut "It's important to note that", "It should be mentioned that", "In order to", "The fact that", "Basically", "Essentially". Get to the point.
 
 ## Workflow
 
@@ -37,9 +41,11 @@ When reviewing a PR:
    - Em-dashes
    - Unnecessary intensifiers
    - Over-summarization patterns
-   - Informal "you" usage outside tutorials
    - Wordy constructions that can be tightened
    - AI-sounding phrases
+   - Run-on sentences or multiple ideas crammed into one sentence
+   - Passive voice where active would be clearer
+   - Overly complex phrasing that hinders comprehension
 
 4. **Generate fixes**: For each violation, provide a specific replacement. Do not just flag issues; fix them.
 
@@ -82,6 +88,7 @@ These patterns indicate AI-generated content:
 - "Seamlessly integrate..."
 - "Robust solution for..."
 - Lists of 3+ items where prose would suffice
+- Passive constructions: "X is done by Y" instead of "Y does X"
 
 ## Technical Context
 
@@ -92,3 +99,51 @@ These patterns indicate AI-generated content:
 - Check `snippets/release-version.mdx` for version references
 
 When in doubt about style, read existing documentation files to calibrate. The goal is documentation that sounds like a knowledgeable human wrote it efficiently; not an AI trying to be helpful.
+
+## Explanation and Structure Preferences
+
+**Bottom-up explanations**: Start with simple, foundational concepts and build toward complexity. Layer ideas progressively. Do not state a complex concept upfront and then decompose it.
+
+**Conceptual vs tutorial content**: Conceptual pages stay high-level; implementation detail belongs in tutorials. If a conceptual page needs code, keep it minimal and illustrative.
+
+**Prose-first structure**: Explain concepts in flowing prose. Use lists, tables, and diagrams only when they genuinely aid comprehension. Avoid defaulting to bullet lists when prose would be clearer.
+
+**Terminology**: Define terms inline on first use in parentheses: "The zkVM (zero-knowledge virtual machine) executes..."
+
+**External references**: Use explicit callout boxes (`<Tip>`, `<Note>`, `<Info>`) when pointing to external documentation. This makes external links visible and intentional.
+
+**Instructions**: Include the "why" alongside commands. Instead of "Run `cargo build`", write "Run `cargo build`; this compiles the guest program."
+
+**Errors and troubleshooting**: Use a structured problem/cause/solution format. State the error, explain why it happens, then give the fix.
+
+**Configuration documentation**: Always use tables for configuration options and parameters.
+
+## Words and Phrases to Eliminate
+
+**Hedging language**: might, could, possibly, perhaps, maybe, tends to, can sometimes, in some cases
+
+**Redundant phrases**:
+- "in order to" → "to"
+- "the fact that" → delete or rephrase
+- "due to the fact that" → "because"
+- "it is important to note that" → delete and state the fact
+- "basically", "essentially", "fundamentally" → delete
+
+**Empty transitions**: "Now let's", "Moving on to", "Next up", "With that said", "Having said that", "As mentioned earlier"
+
+**Marketing speak**: powerful, seamless, robust, state-of-the-art, leverage (use "use"), utilize (use "use"), unlock, enable, empower, cutting-edge, game-changing
+
+**Minimizing words**: just, simply, easily, only, obviously, clearly, of course, super, incredibly, extremely
+
+These words often hide complexity or condescend to readers. Delete them or rewrite to be specific.
+
+## Style Correction Examples
+
+**Before**: "In order to leverage the powerful capabilities of the zkVM, you might want to consider utilizing the preflight function."
+**After**: "Use the preflight function to estimate cycle count before submitting a request."
+
+**Before**: "Now let's move on to discussing how the prover basically handles the request. It's important to note that the prover will simply download the program and execute it."
+**After**: "The prover downloads the program and executes it to determine cycle count."
+
+**Before**: "The Boundless Market is a robust, state-of-the-art coordination mechanism that seamlessly connects requestors with provers."
+**After**: "The Boundless Market connects requestors with provers."
