@@ -144,7 +144,8 @@
               "developers/tutorials/proof-types",
               "developers/tutorials/bonsai",
               "developers/tutorials/sensitive-inputs",
-              "developers/tutorials/smart-contract-requestor"
+              "developers/tutorials/smart-contract-requestor",
+              "developers/tutorials/request-stream"
             ]
           },
           {

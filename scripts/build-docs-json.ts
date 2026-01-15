@@ -11,7 +11,7 @@
 
 import { watch } from "fs";
 import { readFile, writeFile } from "fs/promises";
-import { parse as parseYAML } from "yaml"; // Use the 'yaml' package for better parsing
+import { parse as parseYAML } from "yaml";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
