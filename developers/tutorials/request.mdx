@@ -148,6 +148,10 @@ export AWS_REGION="us-east-1"
 
 Once these are set, this will automatically use the specified [AWS S3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-buckets-s3.html) for storage of programs and inputs.
 
+<Warning>
+  By default, the SDK generates S3 presigned URLs that expire after 12 hours. If your request has an expiry period greater than 12 hours to be fulfilled, provers will not be able to download your program or inputs after the URL expires. For long-running requests, consider using IPFS storage or setting `S3_NO_PRESIGNED=1` to use direct S3 URLs with appropriate bucket policies.
+</Warning>
+
 #### No Storage Provider
 
 A perfectly valid option for `StorageProvider` is `None`; if you don't set any relevant environment variables for IPFS/S3, it won't use a storage provider to upload programs or inputs at runtime. This means you will need to upload your program ahead of time, and provide the public URL. For the inputs, you can also pass them inline (i.e. in the transaction) if they are small enough. Otherwise, you can upload inputs ahead of time as well.
@@ -217,6 +221,24 @@ let (request_id, expires_at) = client.submit_onchain(request).await?;
 In this example, inputs are included inline if they are small (e.g. less than 1 kB) or uploaded to a public URL first if they are large.
 
 When submitting requests onchain with inline inputs, this will cost more gas if the inputs are large. The offchain order-stream service also places limits on the size of inline input.
+
+### Size Limits
+
+Provers enforce default limits on file and journal sizes. Requests exceeding these limits will be ignored by most provers.
+
+#### File Size Limits
+
+Programs and input files must be under **50MB**. This limit applies to:
+- Guest program ELF binaries
+- Input files uploaded to storage providers
+
+This prevents DoS attacks that would force provers to download excessively large files, wasting bandwidth and storage resources.
+
+#### Journal Size Limits
+
+Journals that need to be delivered on-chain must be under **10KB**. This prevents griefing attacks where malicious requestors force provers to post expensive amounts of calldata on-chain, costing the prover significant gas fees.
+
+If your journal exceeds 10KB, consider using the `ClaimDigestMatch` predicate and designing your application to store journals off-chain. See [Journal Size Limits](/developers/tutorials/proof-types#journal-size-limits) for details.
 
 ### Proof Types
 
