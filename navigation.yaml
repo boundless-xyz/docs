@@ -46,6 +46,7 @@ tabs:
           - developers/tutorials/bonsai
           - developers/tutorials/sensitive-inputs
           - developers/tutorials/smart-contract-requestor
+          - developers/tutorials/request-stream
 
       - group: Smart Contracts
         icon: file-contract
@@ -83,6 +84,11 @@ tabs:
           - provers/monitoring
           - provers/performance-optimization
           - provers/bento
+
+      - group: Tooling
+        icon: wrench
+        pages:
+          - provers/cli
 
       - group: $ZKC Overview
         icon: coins

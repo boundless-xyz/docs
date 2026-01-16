@@ -20,21 +20,8 @@ When you submit a proof request to Boundless, you can track its status programma
 
 Here's how to wait for a request to be fulfilled:
 
-{/* <StripRustCodeComments> */}
 ```rust no_run
-# use boundless_market::{Client, StorageProviderConfig};
-# use boundless_market::request_builder::OfferParams;
-# use std::time::Duration;
-# use anyhow::Result;
-# use alloy_primitives::U256;
-# use alloy::signers::local::PrivateKeySigner;
 #
-# async fn example() -> Result<()> {
-# let private_key = PrivateKeySigner::random();
-# let client = Client::builder().with_private_key(private_key).build().await?;
-# let program = vec![0u8; 32]; // Example program bytes
-# let input = vec![]; // Example input
-# let offer_params = OfferParams::builder(); // Example auction parameters
 
 // Submit your request
 let request = client.new_request()
@@ -54,10 +41,7 @@ let fulfillment = client
     )
     .await?;
 tracing::info!("Request {:x} fulfilled", request_id);
-# Ok(())
-# }
 ```
-{/* </StripRustCodeComments> */}
 
 ### How It Works
 
@@ -83,20 +67,8 @@ Boundless tracks these request states:
 
 When tracking requests, handle these potential outcomes:
 
-{/* <StripRustCodeComments> */}
 ```rust no_run
-# use boundless_market::client::ClientError;
-# use boundless_market::contracts::{boundless_market::MarketError, FulfillmentData};
-# use boundless_market::Client;
-# use std::time::Duration;
-# use alloy_primitives::U256;
-# use anyhow::Result;
 #
-# async fn example() -> Result<()> {
-# let client = Client::builder().build().await?;
-# let request_id = U256::from(0); // Example request ID
-# let check_interval = Duration::from_secs(5);
-# let expires_at = 0u64; // Example expiry time
 
 match client.wait_for_request_fulfillment(request_id, check_interval, expires_at).await {
     Ok(fulfillment) => {
@@ -112,27 +84,14 @@ match client.wait_for_request_fulfillment(request_id, check_interval, expires_at
         // Handle other errors
     }
 }
-# Ok(())
-# }
 ```
-{/* </StripRustCodeComments> */}
 
 ### Advanced Tracking
 
 For more control, you can manually check request status:
 
-{/* <StripRustCodeComments> */}
 ```rust no_run
-# use boundless_market::contracts::RequestStatus;
-# use boundless_market::Client;
-# use alloy_primitives::U256;
-# use anyhow::Result;
-# use std::time::Duration;
 #
-# async fn example() -> Result<()> {
-# let client = Client::builder().build().await?;
-# let request_id = U256::from(0); // Example request ID
-# let expires_at = 0u64; // Example expiry time
 
 // Check status once
 let status = client.boundless_market.get_status(request_id, Some(expires_at)).await?;
@@ -153,10 +112,7 @@ match status {
         tracing::info!("Request is open for bidding");
     }
 }
-# Ok(())
-# }
 ```
-{/* </StripRustCodeComments> */}
 
 ## Boundless Explorer
 
@@ -166,7 +122,7 @@ The [Boundless Explorer](https://explorer.boundless.network/) provides a straigh
 
 Developers can track live proof request statuses, analyze associated costs, review transaction details, and assess proof performance metrics. Provers can monitor active requests, track earnings, evaluate their efficiency, and benchmark performance against peers.
 
-![Boundless Explorer](/explorer.png)
+![Boundless Explorer](/images/explorer.png)
 
 Access the explorer to:
 

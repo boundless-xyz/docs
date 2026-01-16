@@ -33,88 +33,44 @@ Below is an example of the **Boundless** end-to-end programmatic workflow:
 ```rust
 use boundless_market::Client;
 use alloy::signers::local::LocalSigner;
-# use url::Url;
-# async fn init_client(rpc_url: Url) -> anyhow::Result<()> {
 let client = Client::builder()
     .with_rpc_url(rpc_url)
     .with_private_key(LocalSigner::random())
     .build()
     .await?;
-# Ok(())
-# }
 ```
 
 ### 2. Upload Program and Input
 
-{/* <StripRustCodeComments> */}
 ```rust
-# use boundless_market::{Client, storage::storage_provider_from_env};
-# use alloy::signers::local::LocalSigner;
-# use url::Url;
-# async fn upload_program_and_input(rpc_url: Url) -> anyhow::Result<()> {
-# let client = Client::builder()
-#    .with_rpc_url(rpc_url)
-#    .with_private_key(LocalSigner::random())
-#    .with_storage_provider(Some(storage_provider_from_env()?))
-#    .build()
-#    .await?;
 let program_url = client.upload_program(&std::fs::read("guest.bin")?).await?;
 let input_url = client.upload_input(&[0x41, 0x42, 0x43]).await?;
-# Ok(())
-# }
 ```
-{/* </StripRustCodeComments> */}
 
 ### 3. Submit Proof Request
 
-{/* <StripRustCodeComments> */}
 ```rust
-# use boundless_market::Client;
-# use boundless_market::contracts::ProofRequest;
-# async fn submit_request(client: Client, request: ProofRequest) -> anyhow::Result<()>
-# {
 let (request_id, expires_at) = client.submit_request_onchain(&request).await?;
-# Ok(())
-# }
 ```
-{/* </StripRustCodeComments> */}
 
 ### 4. Await Fulfillment
 
-{/* <StripRustCodeComments> */}
 ```rust
-# use std::time::Duration;
-# use boundless_market::Client;
-# use boundless_market::contracts::ProofRequest;
-# async fn submit_request(client: Client, request: ProofRequest) -> anyhow::Result<()>
-# {
-# let (request_id, expires_at) = client.submit_request_onchain(&request).await?;
 let fulfillment = client
     .wait_for_request_fulfillment(request_id, Duration::from_secs(10), expires_at)
     .await?;
-# Ok(())
-# }
 
 ```
-{/* </StripRustCodeComments> */}
 
 ### 5. Fetch Proof Results
 
-{/* <StripRustCodeComments> */}
 ```rust
-# use alloy::primitives::U256;
-# use boundless_market::Client;
-# async fn fetch_results(client: Client, request_id: U256) -> anyhow::Result<()>
-# {
 // If not using wait_for_request_fulfillment:
 let fulfillment = client.boundless_market.get_request_fulfillment(request_id).await?;
 
 // Advanced: Set-Inclusion Receipt
 let (journal, receipt) = client.fetch_set_inclusion_receipt(request_id, [0u8; 32].into()).await?;
-# Ok(())
-# }
 ```
-{/* </StripRustCodeComments> */}
 
 ## SDK Modules
 
