@@ -225,6 +225,17 @@
             ]
           }
         ]
+      },
+      {
+        "tab": "Governance",
+        "groups": [
+          {
+            "group": " ",
+            "pages": [
+              "governance/introduction"
+            ]
+          }
+        ]
       }
     ]
   }
