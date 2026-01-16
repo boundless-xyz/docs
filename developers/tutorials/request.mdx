@@ -148,6 +148,10 @@ export AWS_REGION="us-east-1"
 
 Once these are set, this will automatically use the specified [AWS S3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-buckets-s3.html) for storage of programs and inputs.
 
+<Warning>
+  The SDK generates S3 presigned URLs that expire after 12 hours. If your request takes longer to fulfill, provers cannot download your program or inputs after expiry. For long-running requests, use IPFS storage or set `S3_NO_PRESIGNED=1` to use direct S3 URLs with appropriate bucket policies.
+</Warning>
+
 #### No Storage Provider
 
 A perfectly valid option for `StorageProvider` is `None`; if you don't set any relevant environment variables for IPFS/S3, it won't use a storage provider to upload programs or inputs at runtime. This means you will need to upload your program ahead of time, and provide the public URL. For the inputs, you can also pass them inline (i.e. in the transaction) if they are small enough. Otherwise, you can upload inputs ahead of time as well.
@@ -217,6 +221,22 @@ let (request_id, expires_at) = client.submit_onchain(request).await?;
 In this example, inputs are included inline if they are small (e.g. less than 1 kB) or uploaded to a public URL first if they are large.
 
 When submitting requests onchain with inline inputs, this will cost more gas if the inputs are large. The offchain order-stream service also places limits on the size of inline input.
+
+### Size Limits
+
+Provers enforce limits on file and journal sizes. Requests exceeding these limits are ignored by most provers.
+
+#### File Size Limits
+
+Programs and input files must be under **50MB**. This applies to guest program ELF binaries and input files uploaded to storage providers.
+
+Oversized files would force provers to waste bandwidth and storage, so they reject such requests.
+
+#### Journal Size Limits
+
+Journals delivered on-chain must be under **10KB**. Larger journals would force provers to post expensive calldata, so they reject such requests.
+
+If your journal exceeds 10KB, use the `ClaimDigestMatch` predicate and store journals off-chain. See [Journal Size Limits](/developers/tutorials/proof-types#journal-size-limits) for details.
 
 ### Proof Types
 
