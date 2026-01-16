@@ -92,13 +92,9 @@ When a proof request is fulfilled, the journal can optionally be delivered on-ch
 
 If your application doesn't need the journal on-chain, using `ClaimDigestMatch` can lead to lower prices since provers won't need to submit potentially large journal data.
 
-#### Size Limits
+#### Journal Size Limits
 
-Provers enforce default limits on file and journal sizes to protect against griefing attacks. Requests exceeding these limits will be ignored by most provers.
-
-**Program and Input Files:** Must be under **50MB** each. This applies to guest program ELF binaries and any input files. This limit prevents DoS attacks that would force provers to download excessively large files.
-
-**Journal Size:** Journals delivered on-chain must be under **10KB**. This prevents griefing attacks where malicious requestors force provers to post expensive amounts of calldata on-chain, costing the prover significant gas fees.
+To prevent griefing attacks where requestors force provers to post expensive amounts of calldata on-chain, there is a **10KB limit** on journal size for on-chain delivery. Provers will ignore requests that require journals larger than 10KB to be posted on-chain.
 
 If your journal exceeds 10KB, use `ClaimDigestMatch` and design your application to store journals off-chain (e.g. via IPFS, a blob storage service, or your own backend).
 
