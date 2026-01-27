@@ -93,6 +93,11 @@
           "anchor": "Latest Release Notes",
           "icon": "notes",
           "href": "https://github.com/boundless-xyz/boundless/releases"
+        },
+        {
+          "anchor": "Governance Timeline",
+          "icon": "landmark",
+          "href": "/governance/introduction"
         }
       ]
     },
@@ -222,17 +227,6 @@
               "zkc/mining/enable",
               "zkc/mining/walkthrough",
               "zkc/mining/claiming-rewards"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Governance",
-        "groups": [
-          {
-            "group": " ",
-            "pages": [
-              "governance/introduction"
             ]
           }
         ]
