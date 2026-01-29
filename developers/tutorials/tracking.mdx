@@ -29,7 +29,7 @@ let request = client.new_request()
     .with_stdin(input)
     .with_offer(offer_params);
 
-let (request_id, expires_at) = client.submit_onchain(request).await?;
+let (request_id, expires_at) = client.submit(request).await?;
 
 // Wait for the request to be fulfilled
 tracing::info!("Waiting for request {:x} to be fulfilled", request_id);

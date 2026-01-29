@@ -126,8 +126,8 @@ async fn proof_submission(signer: &PrivateKeySigner, rpc_url: Url) -> anyhow::Re
             .timeout(300)
         );
 
-    // Submit the request onchain.
-    let (request_id, expires_at) = client.submit_onchain(request).await?;
+    // Submit the request.
+    let (request_id, expires_at) = client.submit(request).await?;
 
     let fulfillment = client
         .wait_for_request_fulfillment(request_id, Duration::from_secs(10), expires_at)

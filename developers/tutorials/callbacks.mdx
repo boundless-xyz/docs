@@ -56,8 +56,8 @@ let request = client.new_request()
             .ramp_up_period(100)
     );
 
-// Submit the request onchain
-let (request_id, expires_at) = client.submit_onchain(request).await?;
+// Submit the request
+let (request_id, expires_at) = client.submit(request).await?;
 ```
 
 Our Counter contract implements the `handleProof` function, which checks if we've already seen this proof, and if not, increments a counter and emits an event:
