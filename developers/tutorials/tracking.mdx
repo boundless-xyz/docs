@@ -26,8 +26,7 @@ Here's how to wait for a request to be fulfilled:
 // Submit your request
 let request = client.new_request()
     .with_program(program)
-    .with_stdin(input)
-    .with_offer(offer_params);
+    .with_stdin(input);
 
 let (request_id, expires_at) = client.submit_onchain(request).await?;
 

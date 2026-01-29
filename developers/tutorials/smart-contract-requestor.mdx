@@ -101,14 +101,7 @@ Then we create our proof request, setting a `Requirement` that the journal shoul
 // Create the request params
 let request = client.new_request()
     .with_program_url(program_url)?
-    .with_stdin(input)
-    .with_offer(
-        OfferParams::builder()
-            .min_price(parse_ether("0.001")?)
-            .max_price(parse_ether("0.002")?)
-            .lock_timeout(1000)
-            .timeout(2000)
-    );
+    .with_stdin(input);
 
 // Build the request
 let request = client.build_request(request).await?;
