@@ -84,8 +84,8 @@ let client = Client::builder()
 // Create a request using new_request
 let request = client.new_request().with_program(ECHO_ELF).with_stdin(echo_message.as_bytes());
 
-// Submit the request onchain, via a transaction
-let (request_id, expires_at) = client.submit_onchain(request).await?;
+// Submit the request
+let (request_id, expires_at) = client.submit(request).await?;
 ```
 
 ### 4. Retrieve the Proof
@@ -214,8 +214,8 @@ or if we look back at the counter example, we can see that the inputs are includ
 // Create a request using new_request
 let request = client.new_request().with_program(ECHO_ELF).with_stdin(echo_message.as_bytes()); // [!code hl] // [!code focus]
 
-// Submit the request directly
-let (request_id, expires_at) = client.submit_onchain(request).await?;
+// Submit the request
+let (request_id, expires_at) = client.submit(request).await?;
 ```
 
 In this example, inputs are included inline if they are small (e.g. less than 1 kB) or uploaded to a public URL first if they are large.
@@ -254,8 +254,8 @@ let echo_request = client
     .with_stdin(echo_message.as_bytes())
     .with_groth16_proof(); // [!code hl] // [!code focus]
 
-// Submit the request onchain
-let (request_id, expires_at) = client.submit_onchain(echo_request).await?;
+// Submit the request
+let (request_id, expires_at) = client.submit(echo_request).await?;
 ```
 
 For a complete working example of requesting a Groth16 proof, see the [composition example](https://github.com/boundless-xyz/boundless/blob/main/examples/composition/apps/src/main.rs).
@@ -281,33 +281,38 @@ For more details on proof types and when to use each, see [Proof Types](/develop
 ### Onchain vs Offchain
 
 The Boundless protocol allows you to submit requests both onchain and offchain.
-
-#### Onchain
-
-To submit a request onchain, we use:
+The recommended default is to attempt offchain submission first and automatically fall back to onchain submission if needed:
 
 ```rust
 // Create a request using new_request
 let request = client.new_request().with_program(ECHO_ELF).with_stdin(echo_message.as_bytes());
 
-// Submit the request directly
-let (request_id, expires_at) = client.submit_onchain(request).await?; // [!code hl] // [!code focus]
+// Submit the request either offchain or onchain
+let (request_id, expires_at) = client.submit(request).await?; // [!code focus]
+```
+
+#### Onchain
+
+To submit a request explicitly onchain (without attempting an offchain submission), use:
+
+```rust
+// Create a request using new_request
+let request = client.new_request().with_program(ECHO_ELF).with_stdin(echo_message.as_bytes());
+
+// Submit the request explicitly onchain
+let (request_id, expires_at) = client.submit_onchain(request).await?; // [!code focus]
 ```
 
 #### Offchain
 
-<Note>
-  When using offchain requests, you are required to deposit funds into the Boundless market contract before you can make any proof requests. This can be done with the [Boundless CLI](/developers/tooling/cli#requestor).
-</Note>
-
-To submit a request offchain, we use:
+To submit a request explicitly offchain (without an onchain fallback), use:
 
 ```rust
 // Create a request using new_request
 let request = client.new_request().with_program(ECHO_ELF).with_stdin(echo_message.as_bytes());
 
-// Submit the request directly
-let (request_id, expires_at) = client.submit_offchain(request).await?; // [!code hl] // [!code focus]
+// Submit the request explicitly offchain
+let (request_id, expires_at) = client.submit_offchain(request).await?; // [!code focus]
 ```
 
 ### Offer
@@ -356,8 +361,8 @@ let request = client.new_request()
       .ramp_up_period(100)
   );
 
-// Submit the request directly
-let (request_id, expires_at) = client.submit_onchain(request).await?;
+// Submit the request
+let (request_id, expires_at) = client.submit(request).await?;
 ```
 
 #### Client-Level Configuration with `config_offer_layer`
