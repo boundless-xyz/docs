@@ -32,14 +32,7 @@ Boundless supports requesting a raw Groth16 proof instead of a merkle inclusion 
 let request = client.new_request()
     .with_program(program)
     .with_stdin(input)
-    .with_groth16_proof()  // Request raw Groth16 proof
-    .with_offer(
-        OfferParams::builder()
-            .min_price(parse_ether("0.001")?)
-            .max_price(parse_ether("0.002")?)
-            .timeout(1000)
-            .lock_timeout(1000)
-    );
+    .with_groth16_proof();  // Request raw Groth16 proof
 ```
 
 ### Request a Blake3 Groth16 Proof
@@ -58,14 +51,7 @@ let request = client
     .new_request()
     .with_program(program)
     .with_stdin(input)
-    .with_blake3_groth16_proof()  // Request Blake3 Groth16 proof
-    .with_offer(
-        OfferParams::builder()
-            .min_price(parse_ether("0.001")?)
-            .max_price(parse_ether("0.002")?)
-            .timeout(1000)
-            .lock_timeout(1000)
-    );
+    .with_blake3_groth16_proof();  // Request Blake3 Groth16 proof
 ```
 
 ## Considerations
@@ -110,14 +96,7 @@ In the composition example, we first request a raw Groth16 proof from the Boundl
 let request = client.new_request()
     .with_program(program)
     .with_stdin(input)
-    .with_groth16_proof()  // Request raw Groth16 proof
-    .with_offer(
-        OfferParams::builder()
-            .min_price(parse_ether("0.001")?)
-            .max_price(parse_ether("0.002")?)
-            .timeout(1000)
-            .lock_timeout(1000)
-    );
+    .with_groth16_proof();  // Request raw Groth16 proof
 ```
 
 We then provide the Groth16 proof as input to the `IDENTITY` zkVM guest program, and verify the proof.

@@ -119,12 +119,7 @@ async fn proof_submission(signer: &PrivateKeySigner, rpc_url: Url) -> anyhow::Re
     // Build the request.
     let request = client.new_request()
         .with_program(std::fs::read("guest.bin")?)
-        .with_stdin(42u32.to_le_bytes())
-        .with_offer(OfferParams::builder()
-            .ramp_up_period(30)
-            .lock_timeout(150)
-            .timeout(300)
-        );
+        .with_stdin(42u32.to_le_bytes());
 
     // Submit the request onchain.
     let (request_id, expires_at) = client.submit_onchain(request).await?;
