@@ -317,9 +317,9 @@ The [Offer](/developers/tutorials/auction) specifies how much the requestor will
 The Client helps you build requests and set these parameters. Within the client, the [OfferLayer](https://docs.rs/boundless-market/latest/boundless_market/request_builder/offer_layer/struct.OfferLayer.html) creates the offer. It contains a set of defaults, and logic to assign a price to your request.
 
 <Warning>
-By default, the parameters are chosen to maximize the chance that a request is fulfilled.
+By default, the parameters maximize the chance of request fulfillment.
 They use relaxed timeouts, dynamic market pricing, and recommended collateral.
-You should only change them if you really need to.
+Change them only when necessary.
 </Warning>
 
 There are two ways to configure auction parameters:
@@ -392,7 +392,7 @@ let client = Client::builder()
 With this configuration, the SDK will execute the request to estimate cycles and calculate appropriate prices.
 
 <Note>
-The SDK will show a warning if any overridden parameter may reduce the chance of fulfillment.
+The SDK warns when an overridden parameter may reduce fulfillment chances.
 </Note>
 
 ### Funding Modes
