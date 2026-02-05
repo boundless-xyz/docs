@@ -281,37 +281,37 @@ For more details on proof types and when to use each, see [Proof Types](/develop
 ### Onchain vs Offchain
 
 The Boundless protocol allows you to submit requests both onchain and offchain.
-The recommended default is to attempt offchain submission first and automatically fall back to onchain submission if needed:
+The default approach attempts offchain submission first, falling back to onchain submission if needed:
 
 ```rust
 // Create a request using new_request
 let request = client.new_request().with_program(ECHO_ELF).with_stdin(echo_message.as_bytes());
 
-// Submit the request either offchain or onchain
+// Submit the request (tries offchain first, falls back to onchain)
 let (request_id, expires_at) = client.submit(request).await?; // [!code focus]
 ```
 
 #### Onchain
 
-To submit a request explicitly onchain (without attempting an offchain submission), use:
+To submit onchain only, bypassing offchain submission:
 
 ```rust
 // Create a request using new_request
 let request = client.new_request().with_program(ECHO_ELF).with_stdin(echo_message.as_bytes());
 
-// Submit the request explicitly onchain
+// Submit onchain only
 let (request_id, expires_at) = client.submit_onchain(request).await?; // [!code focus]
 ```
 
 #### Offchain
 
-To submit a request explicitly offchain (without an onchain fallback), use:
+To submit offchain only, without onchain fallback:
 
 ```rust
 // Create a request using new_request
 let request = client.new_request().with_program(ECHO_ELF).with_stdin(echo_message.as_bytes());
 
-// Submit the request explicitly offchain
+// Submit offchain only
 let (request_id, expires_at) = client.submit_offchain(request).await?; // [!code focus]
 ```
 
