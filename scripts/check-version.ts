@@ -29,6 +29,8 @@ interface GitHubRelease {
   body: string;
   published_at: string;
   html_url: string;
+  draft: boolean;
+  prerelease: boolean;
 }
 
 async function githubFetch(endpoint: string): Promise<any> {
@@ -58,7 +60,22 @@ async function githubFetch(endpoint: string): Promise<any> {
 }
 
 async function getLatestRelease(): Promise<GitHubRelease> {
-  return await githubFetch("/releases/latest");
+  // Fetch recent releases and find the latest full repo release.
+  // Skip crate-specific releases (e.g. boundless-market-v1.3.0, broker-v1.2.1)
+  // which use a prefixed tag format. Full repo releases use: v<major>.<minor>.<patch>
+  const releases: GitHubRelease[] = await githubFetch("/releases?per_page=20");
+
+  const fullRelease = releases.find(
+    (r) => !r.draft && !r.prerelease && /^v\d+\.\d+/.test(r.tag_name),
+  );
+
+  if (!fullRelease) {
+    throw new Error(
+      "No full repo release found (expected tag format: v<major>.<minor>.<patch>)",
+    );
+  }
+
+  return fullRelease;
 }
 
 async function branchExists(branchName: string): Promise<boolean> {
