@@ -122,25 +122,7 @@ To use Pinata for IPFS uploads, set the following environment variable:
 export PINATA_JWT="abcdef..."
 ```
 
-The SDK auto-detects the storage backend from configured environment variables. When `PINATA_JWT` is set, it uses Pinata to upload programs and inputs to IPFS:
-
-```rust
-use boundless_market::StorageUploaderConfig;
-
-// StorageUploaderConfig is a clap Args struct, so it picks up env vars automatically.
-// If using clap, flatten it into your CLI args:
-#[clap(flatten, next_help_heading = "Storage Uploader")]
-storage_config: StorageUploaderConfig,
-
-// Then build the client:
-let client = Client::builder()
-  .with_rpc_url(args.rpc_url)
-  .with_private_key(args.private_key)
-  .with_uploader_config(&args.storage_config) // [!code hl] // [!code focus]
-  .await?
-  .build()
-  .await?;
-```
+The SDK picks the storage backend based on which env vars are set. When `PINATA_JWT` is set, it uses Pinata to upload programs and inputs to IPFS.
 
 #### S3
 
@@ -157,7 +139,11 @@ export AWS_REGION="us-east-1"                        # optional, can be inferred
 Once these are set, this will automatically use the specified [AWS S3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-buckets-s3.html) for storage of programs and inputs.
 
 <Warning>
-  By default, the SDK generates S3 presigned URLs that expire after 12 hours. If your request takes longer to fulfill, provers cannot download your program or inputs after expiry. For long-running requests, use IPFS storage, set `S3_PUBLIC_URL=true` to return public HTTPS URLs (requires a public bucket), or set `S3_PRESIGNED=false` to use direct S3 URLs with appropriate bucket policies.
+  By default, the SDK generates S3 presigned URLs that expire after 12 hours. If your request takes longer to fulfill, provers cannot download your program or inputs after expiry. For long-running requests, you have a few options:
+
+  - Use IPFS storage instead
+  - Set `S3_PUBLIC_URL=true` to return public HTTPS URLs (requires a public bucket)
+  - Set `S3_PRESIGNED=false` to use direct S3 URLs with appropriate bucket policies
 </Warning>
 
 #### Google Cloud Storage (GCS)
@@ -178,9 +164,9 @@ export GCS_BUCKET="your-bucket-name"
 2. Well-known file locations (`~/.config/gcloud/application_default_credentials.json`, set up via `gcloud auth application-default login`)
 3. Workload Identity on GKE, metadata server on Compute Engine, etc.
 
-You can also provide credentials directly via the `GCS_CREDENTIALS_JSON` environment variable for cases where you load credentials from a secrets manager without writing to disk.
+You can also provide credentials directly via `GCS_CREDENTIALS_JSON` when loading from a secrets manager without writing to disk.
 
-**Optional configuration:**
+**Configuration:**
 
 | Environment Variable | Description |
 |---|---|
@@ -189,10 +175,8 @@ You can also provide credentials directly via the `GCS_CREDENTIALS_JSON` environ
 | `GCS_CREDENTIALS_JSON` | Service account JSON string (bypasses ADC) |
 | `GCS_PUBLIC_URL` | Set to `true` to return public HTTPS URLs (`https://storage.googleapis.com/{bucket}/{key}`) instead of `gs://` URLs. Requires the bucket to be publicly readable. |
 
-By default, the GCS uploader returns `gs://` URLs. If your bucket is publicly readable and you want provers to download without GCS credentials, set `GCS_PUBLIC_URL=true`. After each upload, a HEAD request verifies the object is publicly accessible.
-
 <Tip>
-  For public buckets, use `GCS_PUBLIC_URL=true` so provers can download via standard HTTPS without needing GCS credentials.
+  For public buckets, set `GCS_PUBLIC_URL=true` so provers can download via standard HTTPS without needing GCS credentials. After each upload, a HEAD request verifies the object is publicly accessible.
 </Tip>
 
 #### No Storage Provider
