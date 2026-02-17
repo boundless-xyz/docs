@@ -89,7 +89,8 @@ let (journal, receipt) = client.fetch_set_inclusion_receipt(request_id, [0u8; 32
 - `OrderStreamClient`: Submit/fetch orders offchain via WebSocket.
 
 ### `storage`
-- Providers: `S3` and `Pinata` for uploading program and input data.
+- Uploaders: `S3`, `GCS`, and `Pinata` for uploading program and input data.
+- Downloaders: `HTTP`, `S3`, `GCS`, and `File` for downloading programs and inputs (auto-selected based on URL scheme).
 
 ### `selector`
 - Utilities for tracking/verifying proof types.
@@ -98,9 +99,8 @@ let (journal, receipt) = client.fetch_set_inclusion_receipt(request_id, [0u8; 32
 
 ```rust
 use boundless_market::{
-  Client,
+  Client, StorageUploaderConfig,
   contracts::{FulfillmentData, RequestId, Requirements, Predicate, Offer},
-  storage::storage_provider_from_env,
   request_builder::OfferParams,
 };
 use alloy::signers::local::PrivateKeySigner;
@@ -108,11 +108,16 @@ use alloy::primitives::U256;
 use std::time::Duration;
 use url::Url;
 
-async fn proof_submission(signer: &PrivateKeySigner, rpc_url: Url) -> anyhow::Result<()> {
+async fn proof_submission(
+    signer: &PrivateKeySigner,
+    rpc_url: Url,
+    storage_config: &StorageUploaderConfig,
+) -> anyhow::Result<()> {
     let client = Client::builder()
         .with_rpc_url(rpc_url)
         .with_private_key(signer.clone())
-        .with_storage_provider(Some(storage_provider_from_env()?))
+        .with_uploader_config(storage_config)
+        .await?
         .build()
         .await?;
 

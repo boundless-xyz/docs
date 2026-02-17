@@ -199,12 +199,12 @@ With your inputs now sitting privately in S3, you may now [request a proof](/dev
 If you have already uploaded your inputs using the `aws` CLI above, you can skip the information below. Otherwise, if you are interested in using the Boundless SDK to upload your inputs to your S3 bucket, you will need to:
 
 - make sure your AWS credentials are set in environment variables, specifically:
-  - `S3_ACCESS` for the access key
-  - `S3_SECRET` for the secret key
+  - `AWS_ACCESS_KEY_ID` for the access key (optional if using the AWS default credential chain)
+  - `AWS_SECRET_ACCESS_KEY` for the secret key (optional if using the AWS default credential chain)
   - `S3_BUCKET` for the bucket name of the bucket created in [Create the S3 bucket](/developers/tutorials/sensitive-inputs#1-create-the-s3-bucket)
-  - `S3_URL` for the bucket URL of the bucket created in [Create the S3 bucket](/developers/tutorials/sensitive-inputs#1-create-the-s3-bucket)
-  - `AWS_REGION` for the bucket region.
-  - and last, but not least, make sure `S3_NO_PRESIGNED=1`
+  - `S3_URL` for the bucket endpoint URL of the bucket created in [Create the S3 bucket](/developers/tutorials/sensitive-inputs#1-create-the-s3-bucket)
+  - `AWS_REGION` for the bucket region
+  - and last, but not least, make sure `S3_PRESIGNED=false` to use direct S3 URLs
 
 After this setup, you may request a proof programmatically as [Request a Proof](/developers/tutorials/request) recommends; your inputs will be automatically uploaded to your gated S3 bucket, however remember that you still need to go through all the necessary gating policies as laid out in this tutorial to make sure your inputs are private and only available to select provers.
 
@@ -213,7 +213,7 @@ If you're interested in doing a one-off test, take a look at the [requestor modu
 
 <Check>
 Relevant Links:
-[StorageProvider](https://docs.rs/boundless-market/latest/boundless_market/storage/trait.StorageProvider.html), [storage_provider_from_env](https://docs.rs/boundless-market/latest/boundless_market/storage/fn.storage_provider_from_env.html).
+[StorageUploader](https://docs.rs/boundless-market/latest/boundless_market/storage/trait.StorageUploader.html), [StorageUploaderConfig](https://docs.rs/boundless-market/latest/boundless_market/storage/struct.StorageUploaderConfig.html).
 </Check>
 
 ## Prover
