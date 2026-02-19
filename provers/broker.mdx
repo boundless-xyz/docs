@@ -92,6 +92,7 @@ Below are all `broker.toml` settings organized by section:
 | lockin\_gas\_estimate | Gas estimate for lockin call. Used for estimating the gas costs associated with an order during pricing. If not set a conservative default will be used. |
 | fulfill\_gas\_estimate | Gas estimate for fulfill call. Used for estimating the gas costs associated with an order during pricing. If not set a conservative default will be used. |
 | groth16\_verify\_gas\_estimate | Gas estimate for proof verification using the RiscZeroGroth16Verifier. Used for estimating the gas costs associated with an order during pricing. If not set a conservative default will be used. |
+| max\_order\_expiry\_secs | Maximum order expiry duration in seconds (computed as order expiry time from current time). Orders with a longer time until expiry than this value will be skipped. Useful for avoiding orders with excessively long deadlines that may tie up resources or require storing inputs beyond the MinIO input TTL. |
 
 #### [prover] Settings
 
