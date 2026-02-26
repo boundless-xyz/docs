@@ -66,6 +66,10 @@ The Redis node's memory configuration is important for the size of proofs runnin
 We recommend a high memory node for the Redis container as well as active monitoring / alerts (see [monitoring](/provers/monitoring) for more details) on the Redis node to ensure it does not overflow the possible memory.
 </Warning>
 
+### MinIO
+
+MinIO is used for object storage, including proof inputs and receipts. The system applies a lifecycle rule on startup to expire objects under the `inputs/` prefix, preventing unbounded disk growth. The `INPUT_TTL_DAYS` environment variable controls the TTL (default: 1 day).
+
 ### TaskDB
 
 <Tip>
