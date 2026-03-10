@@ -77,7 +77,7 @@ Below are all `broker.toml` settings organized by section:
 | assessor\_default\_image\_url | Default URL for assessor image. This URL will be tried first before falling back to the image URL from the boundless market contract. |
 | set\_builder\_default\_image\_url | Default URL for set builder image. This URL will be tried first before falling back to the image URL from the set verifier contract. |
 | max\_concurrent\_proofs | Maximum number of concurrent proofs that can be processed at once. Used to limit proof tasks spawned to prevent overwhelming the system. |
-| max\_concurrent\_preflights | Maximum number of orders to concurrently preflight. Used to limit preflight tasks spawned to prevent overwhelming the system. |
+| max\_concurrent\_preflights | Maximum number of orders to concurrently preflight. Used to limit preflight tasks spawned to prevent overwhelming the system. Recommended default: `8` to be able to follow all market orders. |
 | order\_pricing\_priority | Determines how orders are prioritized for pricing. Options: "random" (default, process orders in random order), "observation_time" (prioritize orders in the order they were observed, FIFO), "shortest_expiry" (prioritize orders with the earliest deadline first). |
 | order\_commitment\_priority | Determines how orders are prioritized when committing to prove them. Options: "cycle_price" (default, prioritize orders with the highest ETH price per cycle), "random" (process orders in random order), "shortest_expiry" (prioritize orders with the earliest deadline first), "price" (prioritize orders with the highest ETH payment regardless of cycle count). |
 | max\_critical\_task\_retries | Max critical task retries on recoverable failures. The broker service has a number of subtasks. Some are considered critical. If a task fails, it will be retried, but after this number of retries, the process will exit. |
@@ -286,7 +286,7 @@ Then, modify configuration values for each network, keeping the following in min
 
 - The `peak_prove_khz` setting is shared across all brokers
   - For example, if you have [benchmarked](#benchmarking-bento) your broker to be able to prove at 500kHz, the values in each config should not sum up to be more than 500kHz.
-- `max_concurrent_preflights` is set to a value that the bento cluster can keep up with
+- `max_concurrent_preflights` defaults to `8` and should be set to a value that the bento cluster can keep up with
   - It is recommended that the max concurrent preflights across all networks is less than the number of exec agents you have specified in your `compose.yml`.
 - `max_concurrent_proofs` is a per-broker configuration, and is not shared across brokers
 
