@@ -384,8 +384,9 @@ let request = client.new_request()
     OfferParams::builder()
       // The market uses a reverse Dutch auction mechanism to match requests with provers.
       // Each request has a price range that a prover can bid on.
-      .min_price(parse_ether("0.001")?)
-      .max_price(parse_ether("0.002")?)
+      // Prices can be specified in ETH or USD (converted at runtime via price oracle).
+      .min_price(Amount::parse("0.40 USD", None)?)   // or: parse_ether("0.001")?
+      .max_price(Amount::parse("1.00 USD", None)?)   // or: parse_ether("0.002")?
       // The timeout is the maximum number of blocks the request can stay
       // unfulfilled in the market before it expires. If a prover locks in
       // the request and does not fulfill it before the lock timeout, the
@@ -399,6 +400,10 @@ let request = client.new_request()
 let (request_id, expires_at) = client.submit(request).await?;
 ```
 
+<Note>
+USD-denominated prices require a price oracle to be configured on the client via `ClientBuilder::with_price_oracle_manager()`. The oracle fetches live ETH/USD and ZKC/USD rates and converts amounts at request submission time.
+</Note>
+
 #### Client-Level Configuration with `config_offer_layer`
 
 Use `config_offer_layer` when you want to adjust how the SDK calculates auction parameters based on cycle count and gas prices. This is particularly useful when you want to use cycle-based pricing:
@@ -411,9 +416,10 @@ let client = Client::builder()
   .with_uploader_config(&args.storage_config)
   .await?
   .config_offer_layer(|config| config
-    // Set the price per cycle for automatic pricing calculations
-    .max_price_per_cycle(parse_units("0.1", "gwei").unwrap())
-    .min_price_per_cycle(parse_units("0.01", "gwei").unwrap())
+    // Set the price per cycle for automatic pricing calculations.
+    // Can be specified in ETH or USD (converted at runtime via price oracle).
+    .max_price_per_cycle(Amount::parse("0.00001 USD", None).unwrap())  // or: parse_units("0.1", "gwei").unwrap()
+    .min_price_per_cycle(Amount::parse("0.000001 USD", None).unwrap()) // or: parse_units("0.01", "gwei").unwrap()
     // Configure default timeouts and auction parameters
     .ramp_up_period(36)
     .lock_timeout(120)

@@ -62,8 +62,8 @@ Below are all `broker.toml` settings organized by section:
 
 | Setting | Description |
 | ------- | ----------- |
-| min\_mcycle\_price | The minimum price per mega-cycle (i.e. million RISC-V cycles) for the broker to attempt to lock an order, denominated in the native token (e.g. ETH). Orders are preflighted to determine the number of cycles required to prove the order. Based on this cycle count, and the current price of the order, the broker computes the current price per mega-cycle being offered for the order. This value is compared to the min_mcycle_price to determine if the order should be locked. |
-| min\_mcycle\_price\_collateral\_token | The minimum price per mega-cycle for the broker to attempt to fulfill an order in the case that the order was locked by another prover but not fulfilled within the lock timeout. If an order is locked by a prover, but not fulfilled within the lock timeout, that prover is slashed by the amount of collateral specified in the order. A portion of this collateral is then used to incentivize other provers to fulfill the order. This determines the minimum price per mega-cycle in collateral token (ZKC) that must be offered for the broker to attempt to fulfill these orders. Note: attempting to fulfill these orders is a 'proof race' where the first prover to fulfill the order is rewarded with the collateral. |
+| min\_mcycle\_price | The minimum price per mega-cycle (i.e. million RISC-V cycles) for the broker to attempt to lock an order. Accepts `"<value> ETH"` (e.g., `"0.00002 ETH"`) or `"<value> USD"` (e.g., `"0.02 USD"`); USD values are converted to ETH at runtime via the price oracle. Plain numbers without a suffix still work and default to ETH for backward compatibility. This value is used for both primary orders (compared against the order's ETH price per mcycle) and secondary fulfillment orders (converted to ZKC via price oracle for collateral-based comparisons). |
+| expected\_probability\_win\_secondary\_fulfillment | Expected probability (as a percentage) of winning a secondary fulfillment proof race. When another prover fails to fulfill an order and is slashed, multiple provers may race to fulfill the order for the collateral reward. This setting scales the expected reward of those lock-expired orders by the configured percentage before comparing against `min_mcycle_price`. Default: `50`. Values below 100 discount the reward (conservative — fewer secondary orders picked up), 100 means no discount, values above 100 boost the reward (aggressive — more secondary orders picked up). |
 | priority\_requestor\_addresses | Optional priority requestor addresses that can bypass the mcycle limit and max input size limit. If enabled, the order will be preflighted without constraints. |
 | priority\_requestor\_lists | URLs to fetch requestor priority lists from. Requestor priority lists specify requestors that the broker should prioritize for proving. Requestors on these lists are considered more likely to request useful work with profitable pricing. Priority requestors are prioritized when there is a surplus of demand: their requests will be preflighted first, locked first (in situations where multiple orders exceed minimum lock pricing), and configuration for max_mcycle_limit and max_file_size will be skipped. These lists will be periodically refreshed and merged with priority_requestor_addresses. |
 | peak\_prove\_khz | Estimated peak performance of the proving cluster, in kHz. Used to estimate proving capacity and accept only as much work as your prover cluster can handle. Estimates can be derived from benchmarking using the Boundless CLI. See [Benchmarking Bento](#benchmarking-bento). |
@@ -71,7 +71,7 @@ Below are all `broker.toml` settings organized by section:
 | max\_journal\_bytes | Max journal size in bytes. Orders that produce a journal larger than this size in preflight will be skipped. Since journals must be posted onchain to complete an order, an excessively large journal may prevent completion of a request. |
 | min\_deadline | Min seconds left before the deadline to consider bidding on a request. If there is not enough time left before the deadline, the prover may not be able to complete proving of the request and finalize the batch for publishing before expiration. |
 | lookback\_blocks | On startup, the number of blocks to look back for possible open orders. |
-| max\_collateral | Maximum collateral amount, denominated in the Boundless collateral token, that the broker will use to lock orders. Requests that require a higher collateral amount than this will be skipped. |
+| max\_collateral | Maximum collateral amount that the broker will use to lock orders. Accepts `"<value> ZKC"` (e.g., `"200 ZKC"`) or `"<value> USD"` (e.g., `"100 USD"`); USD values are converted to ZKC at runtime via the price oracle. Requests that require a higher collateral amount than this will be skipped. |
 | max\_file\_size | Max input / image file size allowed for downloading from request URLs. |
 | max\_fetch\_retries | Max retries for fetching input / image contents from URLs. |
 | assessor\_default\_image\_url | Default URL for assessor image. This URL will be tried first before falling back to the image URL from the boundless market contract. |
@@ -124,6 +124,30 @@ Below are all `broker.toml` settings organized by section:
 | batch\_max\_fees | Max batch fees (in ETH) before publishing. |
 | max\_submission\_attempts | Number of attempts to make to submit a batch before abandoning. |
 
+#### [price\_oracle] Settings
+
+The price oracle fetches live ETH/USD and ZKC/USD exchange rates, enabling broker config values to be specified in USD. Chainlink (on-chain, ETH/USD only) and CoinGecko (off-chain, both pairs) are enabled by default; CoinMarketCap is optionally available with an API key. Prices from multiple sources are aggregated using the configured `aggregation_mode`.
+
+| Setting | Description |
+| ------- | ----------- |
+| eth\_usd | Price source for ETH/USD. `"auto"` (default) uses live oracle prices. Set to a static number (e.g., `"2500.00"`) to fix the price and disable live fetching. |
+| zkc\_usd | Price source for ZKC/USD. `"auto"` (default) uses live oracle prices. Set to a static number (e.g., `"1.00"`) to fix the price and disable live fetching. |
+| refresh\_interval\_secs | How often to refresh prices from sources, in seconds (default: `60`). |
+| aggregation\_mode | How to combine prices from multiple sources: `"median"` (default), `"priority"` (use first available source), or `"average"`. |
+| max\_secs\_without\_price\_update | Maximum seconds without a successful price update before the broker logs an error (default: `43200` / 12h). Set to `0` to disable this check. |
+
+**Example configuration with USD-denominated pricing:**
+
+```toml
+[market]
+min_mcycle_price = "0.02 USD"
+max_collateral = "100 USD"
+expected_probability_win_secondary_fulfillment = 50
+
+[price_oracle]
+eth_usd = "auto"
+zkc_usd = "auto"
+```
 
 ## Broker Operation
 
@@ -302,7 +326,7 @@ just broker
 
 Once your broker is running, there are a few methods to optimize the lock-in rate. These methods are aimed at making your broker service more competitive in the market through different means:
 
-1. Decreasing the `min_mcycle_price` would tune your Broker to bid at lower prices for proofs.
+1. Decreasing the `min_mcycle_price` would tune your Broker to bid at lower prices for proofs. This value can be specified in ETH (e.g., `"0.00001 ETH"`) or USD (e.g., `"0.02 USD"`).
 2. Increasing `lockin_priority_gas` expedites your market operations by consuming more gas which could help outrun other bidders.
 
 ### Tuning Service Settings
