@@ -286,6 +286,9 @@ input:
     data: "0181a5737464696edc003553797374656d54696d65207b2074765f7365633a20313733383030343939382c2074765f6e7365633a20363235373837303030207d"
 
 # Offer specifying how much the client is willing to pay to have this request fulfilled
+# Note: prices here are in wei (ETH) and lockCollateral in the smallest ZKC unit (18 decimals).
+# When using the Boundless SDK instead of the CLI, prices can be specified in USD
+# (e.g., "0.50 USD") and are converted to ETH/ZKC at runtime via the price oracle.
 offer:
     minPrice: 100000000000000
     maxPrice: 2000000000000000
