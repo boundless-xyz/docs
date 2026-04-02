@@ -1,0 +1,63 @@
+AI coding agents can use Boundless more effectively when they have access to structured skill files that describe the product's capabilities, workflows, and common patterns.
+
+Boundless publishes a [skill.md](https://docs.boundless.network/skill.md) file following the [agentskills.io](https://agentskills.io) specification. This file gives agents structured context about:
+
+- **Requestor workflows** — submitting proof requests, configuring offers, tracking fulfillment
+- **Prover workflows** — setting up nodes, configuring Bento and Broker, depositing collateral
+- **SDK and CLI usage** — common commands, environment variables, storage providers
+- **Decision guidance** — when to use Groth16 vs aggregated proofs, onchain vs offchain submission
+- **Common gotchas** — free RPC failures, journal size limits, collateral requirements
+
+## Add Boundless to your agent
+
+Install the Boundless skill into your AI agent's context using the [skills CLI](https://www.npmjs.com/package/skills):
+
+```bash
+npx skills add https://docs.boundless.network
+```
+
+This fetches the `skill.md` from Boundless and adds it to your agent's context, so it can help you build on Boundless with accurate, up-to-date guidance.
+
+## Monorepo skills
+
+The [Boundless monorepo](https://github.com/boundless-xyz/boundless) also includes task-specific skills in [`.claude/skills/`](https://github.com/boundless-xyz/boundless/tree/main/.claude/skills) that provide deeper, step-by-step guidance for common workflows:
+
+| Skill | Description |
+|-------|-------------|
+| [`requesting`](https://github.com/boundless-xyz/boundless/tree/main/.claude/skills/requesting) | Submit a proof request end-to-end — wallet setup, CLI install, deposit, submit, poll, and proof retrieval. |
+| [`setup-prover`](https://github.com/boundless-xyz/boundless/tree/main/.claude/skills/setup-prover) | Deploy and manage a Boundless prover on a GPU server using Ansible. |
+| [`boundless-cli`](https://github.com/boundless-xyz/boundless/tree/main/.claude/skills/boundless-cli) | Complete reference for the Boundless CLI — requestor, prover, and rewards commands. |
+
+These skills are automatically available to agents working inside the Boundless monorepo (e.g., Claude Code, Cursor). When you clone the repo, your agent can read the skill files directly.
+
+<Tip>
+If you're using [Claude Code](https://docs.anthropic.com/en/docs/claude-code), the skills in `.claude/skills/` are loaded automatically when relevant. Just ask Claude to help you set up a prover or submit a proof request.
+</Tip>
+
+## What agents can help with
+
+Here are some example prompts to try with your AI agent after adding the Boundless skill:
+
+**For requestors:**
+```
+Help me submit my first proof request on Boundless using the CLI
+```
+```
+I have a RISC Zero guest program — walk me through requesting a proof on Boundless
+```
+
+**For provers:**
+```
+Help me set up a Boundless prover on my GPU server
+```
+```
+My broker isn't picking up requests — help me troubleshoot
+```
+
+**For developers:**
+```
+How do I use Steel to read EVM state in my guest program?
+```
+```
+What's the difference between Groth16 and aggregated proofs?
+```

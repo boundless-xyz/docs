@@ -16,6 +16,7 @@ tabs:
       - group: " "
         pages:
           - developers/quick-start
+          - developers/ai-agents
 
       - group: Introduction
         icon: book-open
@@ -78,6 +79,7 @@ tabs:
       - group: " "
         pages:
           - provers/quick-start
+          - provers/ai-agents
 
       - group: Core Concepts
         icon: gear
