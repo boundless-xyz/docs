@@ -6,30 +6,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is the Boundless documentation site (docs.boundless.network), built with Mintlify. Content is written in MDX files organized into sections: developers, provers, and zkc (ZK mining).
 
-## Stack
-
-- Only use [Bun](https://bun.sh/) instead of `npm`, `pnpm`, `yarn` etc.
-
 ## Commands
 
 ```bash
 # Run local dev server
 mint dev
-
-# Build docs.json from navigation.yaml + docs.base.json
-bun scripts/build-docs-json.ts
-bun scripts/build-docs-json.ts --watch
-
-# Check if docs version matches latest release
-bun run scripts/check-version.ts
-bun run scripts/check-version.ts --auto-update
 ```
 
 ## Architecture
 
-**Navigation workflow:** Edit `navigation.yaml` (never `docs.json` directly), then run `bun scripts/build-docs-json.ts` to regenerate `docs.json` by merging with `docs.base.json`.
+**Configuration:** Edit `docs.json` directly — it's the single Mintlify config file containing theme, navigation, and all settings.
 
-**Release versioning:** The release tag in `snippets/release-version.mdx` is imported by other docs. When updating versions, also find-replace the version string in `provers/quick-start.mdx` and `developers/tooling/cli.mdx`. CI automatically checks for version drift and can create PRs for updates.
+**Release versioning:** When a new version of `boundless-xyz/boundless` is released, find-replace the version string (e.g. `release-1.4`) across these files:
+- `snippets/release-version.mdx`
+- `snippets/cli.mdx`
+- `provers/quick-start.mdx`
+
+You can check the latest release with: `gh release list -R boundless-xyz/boundless -L 1`
 
 ## Code Style
 
