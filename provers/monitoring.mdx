@@ -8,6 +8,19 @@ icon: monitor-waveform
 For technical support, please post your questions on the [Boundless Discussions Forum](https://github.com/boundless-xyz/boundless/discussions).
 </Tip>
 
+## Telemetry
+
+The broker includes an optional telemetry service that reports anonymized health and performance metrics. When enabled, this helps the Boundless team identify issues, diagnose bugs, and prioritize improvements across the network. Telemetry is designed to be lightweight and non-intrusive — no sensitive data such as private keys or wallet balances is collected.
+
+Telemetry is **enabled by default**. To opt out, add the following to your `broker.toml`:
+
+```toml broker.toml
+[market]
+telemetry_mode = "logsonly"
+```
+
+This switches to local debug logging only, with no data sent to any remote service.
+
 ## Grafana
 
 The Bento / Broker Docker compose stack includes a [Grafana](https://grafana.com/) instance with some template dashboards. To access them, Grafana is hosted at `http://localhost:3000`. Default credentials are defined in `.env.broker-template` as `admin:admin`.
