@@ -108,7 +108,8 @@
           {
             "group": " ",
             "pages": [
-              "developers/quick-start"
+              "developers/quick-start",
+              "developers/ai-agents"
             ]
           },
           {
@@ -189,7 +190,8 @@
           {
             "group": " ",
             "pages": [
-              "provers/quick-start"
+              "provers/quick-start",
+              "provers/ai-agents"
             ]
           },
           {
