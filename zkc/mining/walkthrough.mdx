@@ -18,15 +18,13 @@ icon: road
     To do this, provers must use the [Boundless CLI](/zkc/mining/enable#make-sure-to-have-the-boundless-cli-installed) and run the following three commands, `prepare-mining`, `submit-mining` and `claim-mining-rewards`.
   </Step>
   <Step title="Create and Update the State File">
-    Once provers have run some jobs, they can create a new "state" file from work proofs stored in Bento using `prepare-mining`:
+    Before running `prepare-mining`, provers must first create a state file using the interactive setup wizard:
 
     ```bash
-    boundless rewards prepare-mining --new ${REWARD_ADDRESS} --state-file ${STATE_FILE_LOCATION}
+    boundless rewards setup
     ```
 
-    where `${STATE_FILE_LOCATION}` is something like: `~/folder/state.bin`.
-
-    `prepare-mining` aggregates all work proofs and stores the combined proof to the state file. This uses Bento to generate the aggregated work proof (see [prepare.rs](https://github.com/boundless-xyz/boundless/blob/040645c9f91bc4804ba63c9b4744a5a21df0c90c/crates/boundless-cli/src/commands/povw/prepare.rs#L137-L178)); therefore, make sure to have Bento running locally or specify a valid Bento API URL endpoint via `--bento-api-url`. This process is entirely local (i.e. it does not send any transaction).
+    The setup wizard will configure the rewards module (RPC URL, staking address, reward address) and create a new state file at a path you specify. It also stores the state file location in your config so that subsequent commands can find it automatically.
 
     The resultant state file keeps track of all work done so far for one reward address. Each reward address should have *exactly* one state file associated with it. Submitting work for a rewards address requires all previously submitted receipts to be included in the state file. *The same state file must be used for submitting any additional work done by the associated rewards address.* If two state files have the same rewards address, they will conflict during `submit-mining` because they will have different Merkle tree states.
 
@@ -38,25 +36,15 @@ icon: road
     In this scenario, a new rewards address must be specified for Bento, and Bento should be restarted to allow further work to be recorded properly against the new rewards address. *To avoid this scenario, it is recommended to store the state file in a durable location.*
     </Warning>
 
-    Provers only specify the `--new ${REWARD_ADDRESS}` flag once, this is necessary to create the state file for that specific rewards address. Once the state file is created, provers can run `prepare-mining` and specify the state file location directly:
-
-    ```bash
-    boundless rewards prepare-mining --state-file ${STATE_FILE_LOCATION}
-    ```
-
-    or add the mining state file location to the rewards module config by running:
-
-    ```bash
-    boundless rewards setup
-    ```
-
-    which would store the state file location, such that provers can simply run:
+    Once the state file is created via `setup`, provers can aggregate work proofs by running:
 
     ```bash
     boundless rewards prepare-mining
     ```
 
-    from now on. If the state file location changes, make sure to update the location in the config by running `boundless rewards setup` again.
+    `prepare-mining` aggregates all work proofs from Bento and stores the combined proof to the state file. This uses Bento to generate the aggregated work proof; therefore, make sure to have Bento running locally or specify a valid Bento API URL endpoint via `--work-receipt-bento-api-url`. This process is entirely local (i.e. it does not send any transaction).
+
+    You can also pass `--state-file ${STATE_FILE_LOCATION}` explicitly if needed. If the state file location changes, make sure to update it by running `boundless rewards setup` again.
   </Step>
   <Step title="Submit the aggregated work proof onchain">
     After running `prepare-mining`, provers are ready to submit onchain with:
