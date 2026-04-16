@@ -158,8 +158,7 @@
             "group": "Smart Contracts",
             "icon": "file-contract",
             "pages": [
-              "developers/smart-contracts/deployments",
-              "developers/smart-contracts/verifier-contracts"
+              "developers/smart-contracts/deployments"
             ]
           },
           {
