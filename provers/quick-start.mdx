@@ -60,7 +60,21 @@ export PROVER_PRIVATE_KEY=""
 export PROVER_RPC_URL=""
 ```
 
-This is the private key to the wallet which will represent your prover on the market; make sure it has funds. For the RPC url, we recommend using either [Alchemy](https://alchemy.com) or [Quicknode](https://www.quicknode.com/) paid RPC endpoints.
+`PROVER_PRIVATE_KEY` is the wallet that represents your prover on the market — make sure it has funds.
+
+For the RPC URL, recommendations differ by chain:
+
+- **Base mainnet** (chain ID `8453`): [Alchemy](https://alchemy.com) or [Quicknode](https://www.quicknode.com/) paid plans.
+- **Taiko Alethia** (chain ID `167000`): [dRPC](https://drpc.org/chainlist/taiko-mainnet-rpc) offers paid Taiko mainnet endpoints (Alchemy and Quicknode do not currently support Taiko). Taiko's public RPC at `https://rpc.mainnet.taiko.xyz` also works in practice.
+
+To run a prover on multiple chains simultaneously, use per-chain env vars instead of (or alongside) the singular `PROVER_RPC_URL`:
+
+```bash Terminal
+export PROVER_RPC_URL_8453="https://..."     # Base mainnet
+export PROVER_RPC_URL_167000="https://..."   # Taiko Alethia
+```
+
+The broker fails loudly on startup if a chain it's been asked to serve has no RPC URL configured.
 
 <Warning>
 Note that the free RPC plans from either provider *will not* work for longer than a few hours, and therefore this may cause a prover to get slashed, if free RPC limits are hit, after some orders are locked.
