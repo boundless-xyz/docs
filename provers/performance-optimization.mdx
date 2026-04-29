@@ -182,7 +182,7 @@ stack backtrace:
 Indicating that the GPU is out of memory. In this case, the `SEGMENT_SIZE` should be reduced.
 
 <Info>
-If you have a multi-GPU system, your `SEGMENT_SIZE` should be set to the lowest common denominator of the GPUs in the system, so benchmarking should be performed on that card by tuning device-id in `compose.yml`.
+If you have a multi-GPU system with mixed GPU models, the same `SEGMENT_SIZE` is used across all of them, so it must be set to the lowest common denominator of the cards on the host. To find that ceiling, benchmark the smallest-VRAM model in isolation — ideally on a single-GPU host of that model, which matches the canonical Boundless setup.
 </Info>
 
 <Info>
@@ -191,24 +191,14 @@ If a job fails to complete due to OOM, it may be resumed after Bento has been re
 
 ## How to Benchmark an Individual GPU's `SEGMENT_SIZE`
 
-<Steps>
-  <Step title="Configure a Single GPU Instance">
-    ```yml compose.yml
-    gpu_agent0: &gpu
-    image: agent
-    runtime: nvidia
-    pull_policy: never
-    restart: always
-    depends_on:
-      - postgres
-      - redis
-      - minio
+The `gpu_prove_agent` service auto-detects every GPU on the host and spawns one prove-agent process per GPU. To get a clean per-GPU benchmark, the simplest setup is to benchmark on a host that has only the GPU model you're testing — that way `nvidia-smi -L` reports exactly one card and the auto-detect entrypoint targets it directly.
 
-    mem_limit: 4G
-    cpu_count: 4
+<Steps>
+  <Step title="Confirm the host exposes only the GPU you want to benchmark">
+    ```bash Terminal
+    nvidia-smi -L
     ```
-  </Step>
-  <Step title="Verify that No Other GPU Definitions Are Present in the Compose File">
+    Should list exactly one GPU. If the host has multiple GPUs and you can't dedicate the box, run the benchmark on a separate single-GPU machine of the same model — that matches the canonical Boundless setup, which assumes the prover gets the whole host.
   </Step>
   <Step title="Confirm the `SEGMENT_SIZE` Is Set to the Maximum as Determined Above in the `.env.broker` File">
   </Step>
@@ -240,40 +230,9 @@ If a job fails to complete due to OOM, it may be resumed after Bento has been re
 
 ## Multiple Agents and GPUs
 
-We can incorporate multiple GPUs into a configuration. In this example, we have two 16GB GPU as that proved to be optimal above:
+We can incorporate multiple GPUs into a configuration. In this example, we have two 16GB GPUs as that proved to be optimal above.
 
-```yml compose.yml
-....
-  gpu_prove_agent0:
-    <<: *agent-common
-    mem_limit: 4G
-    cpus: 4
-    entrypoint: /app/agent -t prove --redis-ttl ${REDIS_TTL:-57600}
-
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              device_ids: ["0"]
-              capabilities: [gpu]
-
-
-  gpu_prove_agent1:
-    <<: *agent-common
-    mem_limit: 4G
-    cpus: 4
-    entrypoint: /app/agent -t prove --redis-ttl ${REDIS_TTL:-57600}
-
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              device_ids: ["1"]
-              capabilities: [gpu]
-....
-```
+No compose changes are required — `gpu_prove_agent` auto-detects every GPU on the host and spawns one prove-agent process per card. To use both 16GB GPUs, just put them both on the prover host; the entrypoint will pick them up automatically.
 
 Here are the effective results on our example system:
 
