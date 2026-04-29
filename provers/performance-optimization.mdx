@@ -182,7 +182,7 @@ stack backtrace:
 Indicating that the GPU is out of memory. In this case, the `SEGMENT_SIZE` should be reduced.
 
 <Info>
-If you have a multi-GPU system, your `SEGMENT_SIZE` should be set to the lowest common denominator of the GPUs in the system, so benchmarking should be performed on that card by tuning device-id in `compose.yml`.
+If you have a multi-GPU system, your `SEGMENT_SIZE` should be set to the lowest common denominator of the GPUs in the system, so benchmarking should be performed on that card by tuning device-id in `prover-compose.yml` (or `compose.yml` for the legacy stack).
 </Info>
 
 <Info>
@@ -242,7 +242,7 @@ If a job fails to complete due to OOM, it may be resumed after Bento has been re
 
 We can incorporate multiple GPUs into a configuration. In this example, we have two 16GB GPU as that proved to be optimal above:
 
-```yml compose.yml
+```yml prover-compose.yml
 ....
   gpu_prove_agent0:
     <<: *agent-common

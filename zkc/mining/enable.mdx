@@ -45,16 +45,12 @@ Provers will require NVIDIA GPUs and Ubuntu 24.04. For a full list of requiremen
     Provers can use their *\$ZKC* staking address as their Reward Address but this is not recommended. In practice, provers should use a separate wallet to stake *\$ZKC*. For more information, see [Wallet Setup](/zkc/mining/wallet-setup).
     </Tip>
 
-    Before starting Bento again, provers need to enable the ZK mining feature. This requires a valid Ethereum address set to the `REWARD_ADDRESS` environment variable. It is recommended to set this directly in the compose.yml file:
+    Before starting Bento again, provers need to enable the ZK mining feature. This requires a valid Ethereum address set to the `REWARD_ADDRESS` environment variable. It is recommended to set this directly in the compose file you run (`prover-compose.yml` by default, `compose.yml` for the legacy stack), under the `x-base-environment` block:
 
-    ```yml
+    ```yml prover-compose.yml
     x-base-environment: &base-environment
-        DATABASE_URL: postgresql://${POSTGRES_USER:-worker}:${POSTGRES_PASSWORD:-password}@${POSTGRES_HOST:-postgres}:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-taskdb}
+      BENTO_API_URL: http://rest_api:8081
       REDIS_URL: redis://${REDIS_HOST:-redis}:6379
-      S3_URL: http://${MINIO_HOST:-minio}:9000
-      S3_BUCKET: ${MINIO_BUCKET:-workflow}
-      S3_ACCESS_KEY: ${MINIO_ROOT_USER:-admin}
-      S3_SECRET_KEY: ${MINIO_ROOT_PASS:-password}
       RUST_LOG: ${RUST_LOG:-info}
       RISC0_HOME: /usr/local/risc0
       RUST_BACKTRACE: 1

@@ -354,12 +354,12 @@ You can run multiple broker instances simultaneously to serve different networks
 Each broker instance requires:
 
 1. **Separate configuration file**: Create different `broker.toml` files (e.g., `broker.toml`, `broker2.toml`, etc.)
-2. **Different RPC URL**: Use different chain endpoints via setting respective `RPC_URL` environment variables, or modifying the `compose.yml` manually.
+2. **Different RPC URL**: Use different chain endpoints via setting respective `RPC_URL` environment variables, or modifying the compose file manually (`prover-compose.yml` by default, `compose.yml` for the legacy stack).
 3. **Optional separate private key**: Use different `PRIVATE_KEY` variables if desired for different accounts on different networks.
 
 ### Environment Variables for Multi-Broker Setup
 
-If using the default `compose.yml` file and uncommenting the second broker config:
+If using the default compose file (`prover-compose.yml`, or `compose.yml` if `PROVER_STACK=legacy` is set) and uncommenting the second broker config:
 
 ```bash [.env]
 # Export environment variables for the first broker
@@ -385,7 +385,7 @@ Then, modify configuration values for each network, keeping the following in min
 - The `peak_prove_khz` setting is shared across all brokers
   - For example, if you have [benchmarked](#benchmarking-bento) your broker to be able to prove at 500kHz, the values in each config should not sum up to be more than 500kHz.
 - `max_concurrent_preflights` defaults to `8` and should be set to a value that the bento cluster can keep up with
-  - It is recommended that the max concurrent preflights across all networks is less than the number of exec agents you have specified in your `compose.yml`.
+  - It is recommended that the max concurrent preflights across all networks is less than the number of exec agents you have specified in your compose file (`prover-compose.yml` by default, `compose.yml` for the legacy stack).
 - `max_concurrent_proofs` is a per-broker configuration, and is not shared across brokers
 
 Then, just start the cluster as you normally would with:
