@@ -1,0 +1,132 @@
+---
+title: Localnet
+description: Run a self-contained Boundless stack against a local anvil chain for development.
+icon: flask
+---
+
+`just localnet` brings up a complete, throwaway Boundless deployment against a local [anvil](https://book.getfoundry.sh/anvil/) chain — useful for testing requestor flows, broker config, and contract upgrades end-to-end without spending real funds.
+
+The stack runs entirely in Docker and tears down cleanly with one command.
+
+## What's in the stack
+
+| Service        | Purpose                                        | Host port |
+| -------------- | ---------------------------------------------- | --------- |
+| `anvil`        | Local EVM (chain ID `31337`)                   | 8545      |
+| `deployer`     | Deploys all Boundless contracts to anvil       | —         |
+| `postgres`     | Backing store for `order-stream`               | 5435      |
+| `minio`        | S3-compatible object store for guest artifacts | 9100 / 9101 |
+| `order-stream` | Off-chain order relay (REST API + WebSocket)   | 8585      |
+| `broker`       | Reference prover (dev mode, runs in-stack)     | host network |
+
+The `broker` service runs only when `RISC0_DEV_MODE=1` is set (which is the default), so test proofs are mocked and complete in seconds.
+
+## Prerequisites
+
+You'll need:
+
+- [Docker](https://docs.docker.com/engine/install/) and `docker compose`
+- [Foundry](https://book.getfoundry.sh/getting-started/installation) (`forge`, `cast`, `anvil`)
+- [Rust](https://www.rust-lang.org/tools/install) (the toolchain pinned in `rust-toolchain.toml`)
+- [just](https://github.com/casey/just?tab=readme-ov-file#just)
+
+<Warning>
+If your Docker daemon has `"iptables": false` in `/etc/docker/daemon.json`, containers will fail to resolve external DNS during the build. Either remove that flag and `sudo systemctl restart docker`, or add an explicit `"dns": ["8.8.8.8", "1.1.1.1"]` entry — without working in-container DNS, `cargo` and `apt-get` inside the build images cannot fetch dependencies.
+</Warning>
+
+## First-time host build
+
+Before the first `just localnet up`, build the host artifacts so the deployer container can pick up the assessor guest binary and Solidity bindings:
+
+```bash Terminal
+forge build
+cargo build
+```
+
+`forge build` compiles the Solidity contracts and writes ABI artifacts under `out/`. `cargo build` produces the host binaries and triggers the RISC Zero guest build under `target/riscv-guest/`.
+
+<Tip>
+On a typical workstation the first `cargo build` takes 10–15 minutes. Subsequent runs are incremental and complete in seconds.
+</Tip>
+
+## Bringing it up
+
+From the root of the Boundless repo:
+
+```bash Terminal
+just localnet up
+```
+
+This will:
+
+1. Create `.env.localnet` from `.env.localnet-template` if missing.
+2. Build all localnet container images (first run only).
+3. Start `anvil`, `postgres`, `minio`, run the `deployer` to deploy contracts and write addresses to `.env.localnet`, then start `order-stream` and the dev `broker`.
+4. Wait for every service to become `healthy` before returning.
+
+Once it returns, the stack is ready. Confirm with:
+
+```bash Terminal
+docker compose -f dockerfiles/compose.localnet.yml \
+  --profile order-stream --profile dev-broker ps
+```
+
+You should see `anvil`, `broker`, `minio`, `order-stream`, and `postgres` as `Up (healthy)`.
+
+## Using the localnet
+
+`just localnet up` populates `.env.localnet` with everything a requestor or prover client needs — RPC URLs, contract addresses, and a funded test wallet. Source it into your shell:
+
+```bash Terminal
+source .env.localnet
+```
+
+The relevant values:
+
+```bash .env.localnet
+export CHAIN_ID=31337
+export RPC_URL="http://localhost:8545"
+export ORDER_STREAM_URL="http://localhost:8585"
+export RISC0_DEV_MODE=1
+
+export VERIFIER_ADDRESS=...
+export SET_VERIFIER_ADDRESS=...
+export BOUNDLESS_MARKET_ADDRESS=...
+export COLLATERAL_TOKEN_ADDRESS=...
+
+# Funded anvil test wallet
+export PRIVATE_KEY="0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6"
+export ADDRESS="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+
+# MinIO storage for guest artifacts
+export STORAGE_UPLOADER=s3
+export S3_URL=http://localhost:9100
+export AWS_ACCESS_KEY_ID=admin
+export AWS_SECRET_ACCESS_KEY=password
+```
+
+With these set you can submit a request through the [Boundless CLI](/developers/tooling/cli) exactly as you would against a real network — the in-stack broker will pick it up and fulfil it in dev mode within a few seconds.
+
+## Logs and lifecycle
+
+To tail logs across the whole stack:
+
+```bash Terminal
+just localnet logs
+```
+
+To stop the stack while preserving anvil state and MinIO artifacts:
+
+```bash Terminal
+just localnet down
+```
+
+To stop and wipe all volumes and the generated `.env.localnet` (full reset):
+
+```bash Terminal
+just localnet clean
+```
+
+<Warning>
+Localnet is for development only. The dev broker runs with `RISC0_DEV_MODE=1`, which produces fake (zero-cycle) proofs that the deployed verifier accepts in dev mode but real RISC Zero verifiers will reject. Do not use this stack to validate proving performance or to run a competitive prover.
+</Warning>
