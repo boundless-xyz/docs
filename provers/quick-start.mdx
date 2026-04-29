@@ -76,9 +76,9 @@ export PROVER_RPC_URL_167000="https://..."   # Taiko Alethia
 
 The broker fails loudly on startup if a chain it's been asked to serve has no RPC URL configured.
 
-<Warning>
-Note that the free RPC plans from either provider *will not* work for longer than a few hours, and therefore this may cause a prover to get slashed, if free RPC limits are hit, after some orders are locked.
-</Warning>
+<Note>
+Free RPC tiers can be sufficient for low-throughput provers — `ChainMonitorV2` (the default since v1.5) reduced per-block RPC load substantially. Paid plans are still recommended for production to handle traffic spikes without hitting rate limits.
+</Note>
 
 ## Running a Test Proof
 
