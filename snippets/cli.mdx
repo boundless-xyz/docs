@@ -38,6 +38,37 @@ boundless <MODULE> setup
 
 These setup commands store secrets in the `~/.boundless/` directory. Any further command calls will first check this location for the relevant secrets, otherwise it will check the flags passed directly to the command.
 
+### Multi-chain support
+
+The `requestor`, `prover`, and `rewards` modules each track their own *active network*. The `setup` wizard prompts you to pick a network and stores per-chain RPC URL and private key under `~/.boundless/secrets.toml`, keyed by chain. Subsequent commands automatically use the active network for that module.
+
+Supported market networks (used by `requestor` and `prover`):
+
+| Chain ID  | Name              |
+| --------- | ----------------- |
+| 8453      | Base Mainnet      |
+| 167000    | Taiko Mainnet     |
+| 11155111  | Ethereum Sepolia  |
+| 84532     | Base Sepolia      |
+
+The `rewards` module operates on Ethereum L1 (Mainnet or Sepolia).
+
+To list supported networks for a module and see which one is currently active:
+
+```bash
+boundless prover networks
+```
+
+To switch the active network, pass `--set` with a name or chain ID:
+
+```bash
+boundless prover networks --set "Taiko Mainnet"
+# or
+boundless prover networks --set 167000
+```
+
+Switching only changes which chain the module talks to — the per-chain credentials configured during `setup` stay associated with their respective chains, so you can flip between chains without re-entering them.
+
 ### Command help pages
 
 For a detailed help page for a specific command, run the command with the `--help` flag, for example:
@@ -91,6 +122,7 @@ Usage: boundless requestor [OPTIONS] <COMMAND>
 Commands:
   config             Show requestor configuration status
   deposit            Deposit funds into the market
+  deposit-to         Deposit funds into the market on behalf of another address
   withdraw           Withdraw funds from the market
   deposited-balance  Check the balance of an account in the market
   balance            Check the balance of an account (alias for deposited-balance)
@@ -100,6 +132,7 @@ Commands:
   get-proof          Get the journal and seal for a given request
   verify-proof       Verify the proof of the given request
   setup              Interactive setup wizard for requestor configuration
+  networks           List supported networks or switch the active network
   help               Print this message or the help of the given subcommand(s)
 
 Options:
@@ -123,6 +156,17 @@ Module Configuration:
 
 ```
 
+#### Depositing on behalf of another address
+
+`deposit-to` credits the requestor balance of a different address, while the deposit transaction itself is paid by the caller. Useful when funding a customer or shared requestor account.
+
+```bash Terminal
+# Deposit 0.01 ETH to <recipient>'s requestor balance, paid by your wallet.
+boundless requestor deposit-to 0.01 --to 0xRecipientAddress
+```
+
+Only the recipient (holder of the recipient's private key) can later withdraw those funds.
+
 ### Prover
 
 The prover module allows provers to deposit collateral into the market, lock and fulfill orders, carry out benchmarking, manually execute guest programs from the market (useful for debugging), and provides functionality to manually slash an order.
@@ -139,17 +183,19 @@ boundless prover --help
 Usage: boundless prover [OPTIONS] <COMMAND>
 
 Commands:
-  config               Show prover configuration status
-  deposit-collateral   Deposit collateral funds into the market
-  withdraw-collateral  Withdraw collateral funds from the market
-  balance-collateral   Check the collateral balance of an account
-  lock                 Lock a request in the market
-  fulfill              Fulfill one or more proof requests
-  execute              Execute a proof request using the RISC Zero zkVM executor
-  benchmark            Benchmark proof requests
-  slash                Slash a prover for a given request
-  setup                Interactive setup wizard for prover configuration
-  help                 Print this message or the help of the given subcommand(s)
+  config                  Show prover configuration status
+  deposit-collateral      Deposit collateral funds into the market
+  deposit-collateral-to   Deposit collateral funds into the market on behalf of another address
+  withdraw-collateral     Withdraw collateral funds from the market
+  balance-collateral      Check the collateral balance of an account
+  lock                    Lock a request in the market
+  fulfill                 Fulfill one or more proof requests
+  execute                 Execute a proof request using the RISC Zero zkVM executor
+  benchmark               Benchmark proof requests
+  slash                   Slash a prover for a given request
+  setup                   Interactive setup wizard for prover configuration
+  networks                List supported networks or switch the active network
+  help                    Print this message or the help of the given subcommand(s)
 
 Options:
   -h, --help  Print help
@@ -170,6 +216,17 @@ Module Configuration:
   Or configure while executing commands:
     Example: boundless prover balance --prover-rpc-url <url> --prover-private-key <key>
 ```
+
+#### Depositing collateral on behalf of another address
+
+`deposit-collateral-to` credits the collateral balance of a different prover address, while the transaction itself is paid by the caller. Useful for shared treasuries, automated top-up services, or staking on behalf of a managed prover.
+
+```bash Terminal
+# Deposit 50 ZKC of collateral to <recipient>, paid by your wallet.
+boundless prover deposit-collateral-to 50 --to 0xRecipientProverAddress
+```
+
+If the collateral token supports EIP-2612 permit (Base ZKC does), the deposit is one transaction; otherwise it's an `approve` + `depositCollateralTo` two-step. Only the recipient can later withdraw their collateral.
 
 ### Rewards
 
@@ -205,6 +262,7 @@ Commands:
   power                  Check reward power and earning potential
   inspect-mining-state   Inspect mining state file and display detailed statistics
   setup                  Interactive setup wizard for rewards configuration
+  networks               List supported networks or switch the active network
   help                   Print this message or the help of the given subcommand(s)
 
 Options:
