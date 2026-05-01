@@ -74,10 +74,10 @@ export PROVER_RPC_URL_8453="https://..."     # Base mainnet
 export PROVER_RPC_URL_167000="https://..."   # Taiko Alethia
 ```
 
-The broker fails loudly on startup if a chain it's been asked to serve has no RPC URL configured.
+The broker only serves chains it discovers an RPC URL for; chains without one are silently skipped. After starting the stack, check `just prover logs` for one `Starting pipeline for chain` line per chain you expect.
 
 <Note>
-Free RPC tiers can be sufficient for low-throughput provers — `ChainMonitorV2` (the default since v1.5) reduced per-block RPC load substantially. Paid plans are still recommended for production to handle traffic spikes without hitting rate limits.
+Free RPC tiers can be sufficient for low-throughput provers — `ChainMonitorV2` (the new default in v2.0) reduced per-block RPC load substantially. Paid plans are still recommended for production to handle traffic spikes without hitting rate limits.
 </Note>
 
 ## Running a Test Proof
