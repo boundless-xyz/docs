@@ -119,7 +119,16 @@ If everything works, you should see something like the following:
 
 ## Running the Prover Setup Wizard
 
-Once Bento is running successfully, it is time to configure the [broker](/provers/proving-stack#what-is-the-broker). The [Boundless CLI](/developers/tooling/cli) provides an interactive setup wizard to help configure the [broker.toml](/provers/broker#settings-in-brokertoml) and [compose.yml](https://github.com/boundless-xyz/boundless/blob/main/compose.yml) files.
+Once Bento is running successfully, it is time to configure the [broker](/provers/proving-stack#what-is-the-broker). The [Boundless CLI](/developers/tooling/cli) provides an interactive setup wizard (`boundless prover generate-config`) that derives optimised settings from your machine and writes them to [broker.toml](/provers/broker#settings-in-brokertoml) and the compose files.
+
+<Note>
+The Boundless repo ships two compose files:
+
+- [`prover-compose.yml`](https://github.com/boundless-xyz/boundless/blob/main/prover-compose.yml) — the default prover stack (Redis-only, uses the prebuilt `prover-agent` image). This is what `just bento` / `just prover` run unless `PROVER_STACK=legacy` is set.
+- [`compose.yml`](https://github.com/boundless-xyz/boundless/blob/main/compose.yml) — the legacy/dev stack (Postgres + MinIO + Redis, builds the agent image locally).
+
+The setup wizard writes the same derived settings (currently `exec_agent` replica count and `SEGMENT_SIZE`) to both files, so you only need to edit the one matching the stack you actually run.
+</Note>
 
 ### Install the Boundless CLI
 
@@ -145,7 +154,7 @@ and an interactive prompt will appear:
 
 ![Boundless CLI Prover Setup Wizard](/images/prover-setup-wizard.png)
 
-Answer the questions as required, based on your setup and requirements. Once finished, the broker.toml and compose.yml files will be created/edited.
+Answer the questions as required, based on your setup and requirements. Once finished, `broker.toml`, `prover-compose.yml`, and `compose.yml` will be created/edited with the same derived settings.
 
 ## Running the Broker
 
@@ -236,27 +245,16 @@ See the `.env.broker-template` HOST configuration options [here](https://github.
 
 ## Configuring Bento
 
-The `compose.yml` file defines all services within Bento. The Boundless repo includes a starter `compose.yml` which you can see [here](https://github.com/boundless-xyz/boundless/blob/main/compose.yml).
+The compose file defines all services within Bento. By default, `just bento` / `just prover` use [`prover-compose.yml`](https://github.com/boundless-xyz/boundless/blob/main/prover-compose.yml); the legacy [`compose.yml`](https://github.com/boundless-xyz/boundless/blob/main/compose.yml) is used when `PROVER_STACK=legacy` is set. The examples below show `prover-compose.yml` — the equivalent stanzas exist in `compose.yml`.
 
 ### Multi GPU
 
-Under the `exec_agent` service in `compose.yml`, the default configuration utilises a single GPU:
-
-```yml compose.yml
-deploy:
-  resources:
-    reservations:
-      devices:
-        - driver: nvidia
-          device_ids: ['0']
-          capabilities: [gpu]
-```
-
-To add a second GPU, first check your GPUs are recognised with:
+The `gpu_prove_agent` service auto-detects all GPUs visible to the container and spawns one prove agent per GPU — no manual per-GPU configuration is needed for the common case. You can verify which GPUs Bento will use with:
 
 ```bash Terminal
 nvidia-smi -L
 ```
+
 which should output something like:
 
 ```bash
@@ -264,22 +262,7 @@ GPU 0: NVIDIA GeForce RTX 3090 (UUID: GPU-abcde123-4567-8901-2345-abcdef678901)
 GPU 1: NVIDIA GeForce RTX 3090 (UUID: GPU-fedcb987-6543-2109-8765-abcdef123456)
 ```
 
-We can see that GPU 1 is listed with the device ID of `1`. To add this GPU, uncomment `gpu_prove_agent1` from `compose.yml`:
-
-```yml compose.yml
-gpu_prove_agent1: # [!code hl]
-  <<: *agent-common
-  runtime: nvidia
-  deploy:
-    resources:
-      reservations:
-        devices:
-          - driver: nvidia
-            device_ids: ['1'] # [!code hl]
-            capabilities: [gpu]
-```
-
-For 3 or more GPUs, add the corresponding `gpu_prove_agentX` where `X` matches the device ID of each GPU, making sure that the `device_ids` field is populated with a matching `X`: `['X']`.
+All listed GPUs will be picked up automatically — no compose changes are required. If you want Bento to use only some of the GPUs on a host, configure that at the host level (e.g. dedicate the prover machine to Boundless, or use the NVIDIA driver / Docker daemon to control GPU visibility). The recommended Boundless setup is to give the prover a host with exactly the GPUs you want it to use.
 
 ### Segment Size
 
@@ -293,20 +276,24 @@ Larger `SEGMENT_SIZE` values also impact the proving systems conjectured securit
 
 The recommended way to change the segment size is to set the environment variable `SEGMENT_SIZE`, before running broker, to your specified value. This can be done through the [.env.broker](/provers/quick-start#custom-environment) file.
 
-You can also configure the `SEGMENT_SIZE` in `compose.yml` under the `exec_agent` service; it defaults to 21:
+You can also configure `SEGMENT_SIZE` directly in `prover-compose.yml` — it lives in the `x-exec-agent-common` anchor that the `exec_agent` service inherits from, and defaults to 21:
 
-```yml compose.yml
-exec_agent:
+```yml prover-compose.yml
+x-exec-agent-common: &exec-agent-common
   <<: *agent-common
-  runtime: nvidia
-
   mem_limit: 4G
-  cpus: 4
-
+  cpus: 3
   environment:
     <<: *base-environment
     RISC0_KECCAK_PO2: ${RISC0_KECCAK_PO2:-17}
-    entrypoint: /app/agent -t exec --segment-po2 ${SEGMENT_SIZE:-21} # [!code hl]
+    SEGMENT_SIZE: ${SEGMENT_SIZE:-21} # [!code hl]
+    REDIS_TTL: ${REDIS_TTL:-57600}
+  entrypoint:
+    [
+      "/bin/sh",
+      "-c",
+      "/app/agent -t exec --segment-po2 $$SEGMENT_SIZE --redis-ttl $$REDIS_TTL",
+    ]
 ```
 
 ## What next?
