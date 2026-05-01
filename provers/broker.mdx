@@ -168,43 +168,41 @@ selector = "aabbccdd"
 min_mcycle_price = "0.03 USD"
 ```
 
-### Experimental RPC Optimizations
+### Chain Monitor
 
-<Note>
-This feature was introduced in [PR #1715](https://github.com/boundless-xyz/boundless/pull/1715) and is experimental. Behavior and flags may change in future releases.
-</Note>
+v2.0 ships a rewritten chain-watching layer (`ChainMonitorV2`) that replaces the legacy two-service architecture (`ChainMonitorService` + `MarketMonitor`). Instead of polling `eth_getLogs` for market events on every tick, `ChainMonitorV2` uses `eth_getBlockReceipts` to fetch all receipts per block in a single call, then filters for market events locally. This significantly reduces the number of RPC calls — especially on chains like Base where `eth_getLogs` is expensive or rate-limited.
 
-The `--experimental-rpc` flag replaces the standard two-service monitoring architecture (`ChainMonitorService` + `MarketMonitor`) with a single unified `ChainMonitorV2`. Instead of polling `eth_getLogs` for market events on every tick, the `ChainMonitorV2` uses `eth_getBlockReceipts` to fetch all receipts per block in a single call, then filters for market events locally. This significantly reduces the number of RPC calls — especially on chains like Base where `eth_getLogs` can be expensive or rate-limited.
-
-In steady state, the experimental monitor requires roughly **2 RPC requests per block**:
+In steady state, `ChainMonitorV2` requires roughly **2 RPC requests per block**:
 - `eth_getBlockByNumber` to follow the chain head and get the base fee
 - `eth_getBlockReceipts` to get all receipts and transaction fee data
 
-The `ChainMonitorV2` also performs local EIP-1559 gas estimation from receipt data, removing the need for separate `eth_feeHistory` calls.
+It also performs local EIP-1559 gas estimation from receipt data, removing the need for separate `eth_feeHistory` calls.
 
-On startup, the `ChainMonitorV2` uses adaptive log retrieval with binary-search chunking to auto-discover the maximum block range accepted by the RPC provider, catching up on any missed events for open orders. This means the broker won't miss events if it restarts or experiences downtime.
+On startup, `ChainMonitorV2` uses adaptive log retrieval with binary-search chunking to auto-discover the maximum block range accepted by the RPC provider, catching up on any missed events for open orders. This means the broker won't miss events if it restarts or experiences downtime.
 
-#### Enabling Experimental RPC
+#### Selecting the chain monitor
 
-To enable, set the `BROKER_EXTRA_ARGS` environment variable before starting the broker:
+Selection is per-chain via the `rpc_mode` field under `[market]` in `broker.toml` (or in `chain-overrides/broker.{chain_id}.toml`):
 
-```bash Terminal
-export BROKER_EXTRA_ARGS="--experimental-rpc"
-just broker
+```toml broker.toml
+[market]
+rpc_mode = "auto"   # or "v2" or "legacy"
 ```
 
-You can also configure the RPC request timeout (default 15s) to cut off hanging requests so the retry and fallback layers can activate:
+- `"auto"` (default) — chain-specific default: `v2` for Base and most chains, `legacy` for Taiko (167000) where `eth_getBlockReceipts` might get rate limited when using the public rpc.
+- `"v2"` — pin to `ChainMonitorV2`.
+- `"legacy"` — pin to the old `ChainMonitorService` + `MarketMonitor` pair (`eth_getLogs`-based).
+
+You can tune the RPC request timeout (default 15s) to cut off hanging requests so the retry and fallback layers can activate:
 
 ```bash Terminal
-export BROKER_EXTRA_ARGS="--experimental-rpc --rpc-request-timeout 15"
-just broker
+export BROKER_EXTRA_ARGS="--rpc-request-timeout 15"
+just prover
 ```
-
-If no RPC URLs are provided, the experimental mode defaults to `https://base.gateway.tenderly.co`.
 
 #### Sequential Fallback Transport
 
-The experimental RPC mode introduces a `SequentialFallbackTransport` that tries RPC providers in priority order (rather than in parallel), minimizing calls to paid or metered fallback endpoints. When multiple RPC URLs are configured, the transport includes health tracking: it skips providers after consecutive failures and periodically retries them to detect recovery.
+`ChainMonitorV2` uses a `SequentialFallbackTransport` that tries RPC providers in priority order (rather than in parallel), minimizing calls to paid or metered fallback endpoints. When multiple RPC URLs are configured, the transport includes health tracking: it skips providers after consecutive failures and periodically retries them to detect recovery.
 
 The retry and fallback layers are stacked so that on a single RPC failure, the sequential fallback immediately tries the next URL. The outer retry layer only kicks in once all URLs have been exhausted.
 
@@ -215,12 +213,12 @@ To analyze RPC call patterns, enable debug logging for the relevant modules and 
 ```bash Terminal
 RISC0_DEV_MODE=1 \
   RUST_LOG=INFO,broker::chain_monitor_v2=debug,broker::rpcmetrics=debug \
-  BROKER_EXTRA_ARGS="--listen-only --experimental-rpc" \
-  just broker 2>&1 | tee rpc_metrics.log
+  BROKER_EXTRA_ARGS="--listen-only" \
+  just prover 2>&1 | tee rpc_metrics.log
 ```
 
 <Warning>
-This feature is experimental. The `eth_getBlockReceipts` RPC method may not be supported by all RPC providers. While it is possible to run with a free public RPC, these can be unreliable — a dedicated RPC provider is recommended for production use.
+The `eth_getBlockReceipts` RPC method that `ChainMonitorV2` relies on may not be supported by all RPC providers. If your provider doesn't support it, set `rpc_mode = "legacy"` for the affected chain. Free public RPCs can be unreliable — a dedicated RPC provider is recommended for production use.
 </Warning>
 
 ## Broker Operation
