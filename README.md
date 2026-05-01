@@ -17,7 +17,7 @@ mint dev
 
 ## Updating Release Versions
 
-When a new release drops, find-replace the version string (e.g. `release-1.5` → `release-1.6`) in:
+When a new release drops, find-replace the version string (e.g. `release-2.0` → `release-2.1`) in:
 - `snippets/release-version.mdx`
 - `snippets/cli.mdx`
 - `provers/quick-start.mdx`
