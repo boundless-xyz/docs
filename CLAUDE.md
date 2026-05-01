@@ -17,7 +17,7 @@ mint dev
 
 **Configuration:** Edit `docs.json` directly — it's the single Mintlify config file containing theme, navigation, and all settings.
 
-**Release versioning:** When a new version of `boundless-xyz/boundless` is released, find-replace the version string (e.g. `release-1.5`) across these files:
+**Release versioning:** When a new version of `boundless-xyz/boundless` is released, find-replace the version string (e.g. `release-2.0`) across these files:
 - `snippets/release-version.mdx`
 - `snippets/cli.mdx`
 - `provers/quick-start.mdx`
