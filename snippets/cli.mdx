@@ -40,7 +40,7 @@ These setup commands store secrets in the `~/.boundless/` directory. Any further
 
 ### Multi-chain support
 
-The `requestor`, `prover`, and `rewards` modules each track their own *active network*. The `setup` wizard prompts you to pick a network and stores per-chain RPC URL and private key under `~/.boundless/secrets.toml`, keyed by chain. Subsequent commands automatically use the active network for that module.
+The `requestor`, `prover`, and `rewards` modules each track their own *active network*. The `setup` wizard prompts you to pick a network and stores the per-chain RPC URL and private key under `~/.boundless/secrets.toml`, keyed by chain. Subsequent commands use the active network for that module.
 
 Supported market networks (used by `requestor` and `prover`):
 
@@ -67,7 +67,7 @@ boundless prover networks --set "Taiko Mainnet"
 boundless prover networks --set 167000
 ```
 
-Switching only changes which chain the module talks to — the per-chain credentials configured during `setup` stay associated with their respective chains, so you can flip between chains without re-entering them.
+Switching changes which chain the module targets. Per-chain credentials configured during `setup` stay associated with their chains, so you can flip between them without re-entering credentials.
 
 ### Command help pages
 
@@ -158,7 +158,7 @@ Module Configuration:
 
 #### Depositing on behalf of another address
 
-`deposit-to` credits the requestor balance of a different address, while the deposit transaction itself is paid by the caller. Useful when funding a customer or shared requestor account.
+`deposit-to` credits the requestor balance of a different address, with the caller paying for the transaction. Useful for funding a customer or shared requestor account.
 
 ```bash Terminal
 # Deposit 0.01 ETH to <recipient>'s requestor balance, paid by your wallet.
@@ -219,7 +219,7 @@ Module Configuration:
 
 #### Depositing collateral on behalf of another address
 
-`deposit-collateral-to` credits the collateral balance of a different prover address, while the transaction itself is paid by the caller. Useful for shared treasuries, automated top-up services, or staking on behalf of a managed prover.
+`deposit-collateral-to` credits the collateral balance of a different prover address, with the caller paying for the transaction. Useful for shared treasuries, automated top-up services, or staking on behalf of a managed prover.
 
 ```bash Terminal
 # Deposit 50 ZKC of collateral to <recipient>, paid by your wallet.
