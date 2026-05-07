@@ -6,7 +6,7 @@ icon: lock
 
 <Note>
 - *\$ZKC* is deployed on Ethereum Mainnet and Base Mainnet.
-- *\$ZKC* is also bridged to Taiko Alethia for proving on Taiko.
+- *\$ZKC* is also bridged to Taiko Alethia.
 - To use *\$ZKC* in the Boundless market as [Proving Collateral](/provers/quick-start#deposit-collateral) on an L2, *\$ZKC* must be [bridged](/zkc/collateral#bridging-zkc) from Ethereum mainnet to that L2.
 - Provers also need a small amount of native ETH on the destination L2 to pay for `depositCollateral` and ongoing market interactions.
 </Note>
@@ -72,9 +72,7 @@ cast send 0x3154Cf16ccdb4C6d922629664174b904d80F2C35 \
 
 ### Bridging using Taiko's Native Bridge
 
-To deposit *\$ZKC* as collateral on Taiko, you also need a small amount of native ETH on Taiko to pay for the `depositCollateral` transaction and ongoing market interactions. Both *\$ZKC* and ETH are bridged through the same flow.
-
-To bridge *\$ZKC* and native ETH from Ethereum mainnet to Taiko Alethia, see [bridge.taiko.xyz](https://bridge.taiko.xyz) and [Taiko's contract documentation](https://docs.taiko.xyz/network/contract-addresses). The Taiko relayer mints the bridged tokens on L2 a few minutes after L1 confirmation.
+Both *\$ZKC* and native ETH are bridged through the same flow. To bridge from Ethereum mainnet to Taiko Alethia, see [bridge.taiko.xyz](https://bridge.taiko.xyz) and [Taiko's contract documentation](https://docs.taiko.xyz/network/contract-addresses). The Taiko relayer mints the bridged tokens on L2 a few minutes after L1 confirmation.
 
 ### Manual Bridging to Taiko using `cast`
 
