@@ -124,10 +124,10 @@ Once Bento is running successfully, it is time to configure the [broker](/prover
 <Note>
 The Boundless repo ships two compose files:
 
-- [`prover-compose.yml`](https://github.com/boundless-xyz/boundless/blob/main/prover-compose.yml) — the default prover stack (Redis-only, uses the prebuilt `prover-agent` image). This is what `just bento` / `just prover` run unless `PROVER_STACK=legacy` is set.
-- [`compose.yml`](https://github.com/boundless-xyz/boundless/blob/main/compose.yml) — the legacy/dev stack (Postgres + MinIO + Redis, builds the agent image locally).
+- [`prover-compose.yml`](https://github.com/boundless-xyz/boundless/blob/main/prover-compose.yml): the default prover stack (Redis-only, uses the prebuilt `prover-agent` image). `just bento` and `just prover` run this unless `PROVER_STACK=legacy` is set.
+- [`compose.yml`](https://github.com/boundless-xyz/boundless/blob/main/compose.yml): the legacy/dev stack (Postgres + MinIO + Redis, builds the agent image locally).
 
-The setup wizard writes the same derived settings (currently `exec_agent` replica count and `SEGMENT_SIZE`) to both files, so you only need to edit the one matching the stack you actually run.
+The setup wizard writes the same derived settings (currently `exec_agent` replica count and `SEGMENT_SIZE`) to both files, so you only need to edit the one matching the stack you run.
 </Note>
 
 ### Install the Boundless CLI
@@ -245,11 +245,11 @@ See the `.env.broker-template` HOST configuration options [here](https://github.
 
 ## Configuring Bento
 
-The compose file defines all services within Bento. By default, `just bento` / `just prover` use [`prover-compose.yml`](https://github.com/boundless-xyz/boundless/blob/main/prover-compose.yml); the legacy [`compose.yml`](https://github.com/boundless-xyz/boundless/blob/main/compose.yml) is used when `PROVER_STACK=legacy` is set. The examples below show `prover-compose.yml` — the equivalent stanzas exist in `compose.yml`.
+The compose file defines all services within Bento. By default, `just bento` and `just prover` use [`prover-compose.yml`](https://github.com/boundless-xyz/boundless/blob/main/prover-compose.yml); the legacy [`compose.yml`](https://github.com/boundless-xyz/boundless/blob/main/compose.yml) is used when `PROVER_STACK=legacy` is set. The examples below show `prover-compose.yml`; equivalent stanzas exist in `compose.yml`.
 
 ### Multi GPU
 
-The `gpu_prove_agent` service auto-detects all GPUs visible to the container and spawns one prove agent per GPU — no manual per-GPU configuration is needed for the common case. You can verify which GPUs Bento will use with:
+The `gpu_prove_agent` service auto-detects all GPUs visible to the container and spawns one prove agent per GPU; no manual per-GPU configuration is needed for the common case. To verify which GPUs Bento will use, run:
 
 ```bash Terminal
 nvidia-smi -L
@@ -262,7 +262,7 @@ GPU 0: NVIDIA GeForce RTX 3090 (UUID: GPU-abcde123-4567-8901-2345-abcdef678901)
 GPU 1: NVIDIA GeForce RTX 3090 (UUID: GPU-fedcb987-6543-2109-8765-abcdef123456)
 ```
 
-All listed GPUs will be picked up automatically — no compose changes are required. If you want Bento to use only some of the GPUs on a host, configure that at the host level (e.g. dedicate the prover machine to Boundless, or use the NVIDIA driver / Docker daemon to control GPU visibility). The recommended Boundless setup is to give the prover a host with exactly the GPUs you want it to use.
+All listed GPUs are picked up automatically; no compose changes are required. To restrict Bento to a subset of GPUs on a host, configure visibility at the host level (e.g. dedicate the prover machine to Boundless, or use the NVIDIA driver or Docker daemon to control GPU visibility). The recommended Boundless setup is to give the prover a host with exactly the GPUs you want it to use.
 
 ### Segment Size
 
@@ -276,7 +276,7 @@ Larger `SEGMENT_SIZE` values also impact the proving systems conjectured securit
 
 The recommended way to change the segment size is to set the environment variable `SEGMENT_SIZE`, before running broker, to your specified value. This can be done through the [.env.broker](/provers/quick-start#custom-environment) file.
 
-You can also configure `SEGMENT_SIZE` directly in `prover-compose.yml` — it lives in the `x-exec-agent-common` anchor that the `exec_agent` service inherits from, and defaults to 21:
+You can also configure `SEGMENT_SIZE` directly in `prover-compose.yml`; it lives in the `x-exec-agent-common` anchor that the `exec_agent` service inherits from, and defaults to 21:
 
 ```yml prover-compose.yml
 x-exec-agent-common: &exec-agent-common

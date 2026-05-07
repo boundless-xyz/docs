@@ -170,7 +170,7 @@ min_mcycle_price = "0.03 USD"
 
 ### Chain Monitor
 
-v2.0 ships a rewritten chain-watching layer (`ChainMonitorV2`) that replaces the legacy two-service architecture (`ChainMonitorService` + `MarketMonitor`). Instead of polling `eth_getLogs` for market events on every tick, `ChainMonitorV2` uses `eth_getBlockReceipts` to fetch all receipts per block in a single call, then filters for market events locally. This significantly reduces the number of RPC calls — especially on chains like Base where `eth_getLogs` is expensive or rate-limited.
+v2.0 introduces a rewritten chain-watching layer, `ChainMonitorV2`, that replaces the legacy two-service architecture (`ChainMonitorService` + `MarketMonitor`). Instead of polling `eth_getLogs` for market events on every tick, `ChainMonitorV2` uses `eth_getBlockReceipts` to fetch all receipts per block in a single call, then filters for market events locally. This reduces the number of RPC calls, especially on chains like Base where `eth_getLogs` is expensive or rate-limited.
 
 In steady state, `ChainMonitorV2` requires roughly **2 RPC requests per block**:
 - `eth_getBlockByNumber` to follow the chain head and get the base fee
@@ -189,9 +189,9 @@ Selection is per-chain via the `rpc_mode` field under `[market]` in `broker.toml
 rpc_mode = "auto"   # or "v2" or "legacy"
 ```
 
-- `"auto"` (default) — chain-specific default: `v2` for Base and most chains, `legacy` for Taiko (167000) where `eth_getBlockReceipts` might get rate limited when using the public rpc.
-- `"v2"` — pin to `ChainMonitorV2`.
-- `"legacy"` — pin to the old `ChainMonitorService` + `MarketMonitor` pair (`eth_getLogs`-based).
+- `"auto"` (default): chain-specific default. Uses `v2` for Base and most chains, `legacy` for Taiko (167000), where the public RPC rate-limits `eth_getBlockReceipts`.
+- `"v2"`: pin to `ChainMonitorV2`.
+- `"legacy"`: pin to the old `ChainMonitorService` + `MarketMonitor` pair (`eth_getLogs`-based).
 
 You can tune the RPC request timeout (default 15s) to cut off hanging requests so the retry and fallback layers can activate:
 
@@ -218,7 +218,7 @@ RISC0_DEV_MODE=1 \
 ```
 
 <Warning>
-The `eth_getBlockReceipts` RPC method that `ChainMonitorV2` relies on may not be supported by all RPC providers. If your provider doesn't support it, set `rpc_mode = "legacy"` for the affected chain. Free public RPCs can be unreliable — a dedicated RPC provider is recommended for production use.
+Not all RPC providers support the `eth_getBlockReceipts` method that `ChainMonitorV2` relies on. If your provider doesn't support it, set `rpc_mode = "legacy"` for the affected chain. Free public RPCs are unreliable; use a dedicated RPC provider for production.
 </Warning>
 
 ## Broker Operation
