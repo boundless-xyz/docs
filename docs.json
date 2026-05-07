@@ -138,7 +138,8 @@
             "icon": "wrench",
             "pages": [
               "developers/tooling/sdk",
-              "developers/tooling/cli"
+              "developers/tooling/cli",
+              "developers/tooling/localnet"
             ]
           },
           {
