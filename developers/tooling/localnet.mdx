@@ -4,22 +4,22 @@ description: Run a self-contained Boundless stack against a local anvil chain fo
 icon: flask
 ---
 
-`just localnet` brings up a complete, throwaway Boundless deployment against a local [anvil](https://book.getfoundry.sh/anvil/) chain — useful for testing requestor flows, broker config, and contract upgrades end-to-end without spending real funds.
+`just localnet` brings up a throwaway Boundless deployment against a local [anvil](https://book.getfoundry.sh/anvil/) chain. Use it to test requestor flows, broker config, and contract upgrades end-to-end without spending real funds.
 
-The stack runs entirely in Docker and tears down cleanly with one command.
+The stack runs in Docker and tears down with one command.
 
 ## What's in the stack
 
 | Service        | Purpose                                        | Host port |
 | -------------- | ---------------------------------------------- | --------- |
 | `anvil`        | Local EVM (chain ID `31337`)                   | 8545      |
-| `deployer`     | Deploys all Boundless contracts to anvil       | —         |
+| `deployer`     | Deploys all Boundless contracts to anvil       | n/a       |
 | `postgres`     | Backing store for `order-stream`               | 5435      |
 | `minio`        | S3-compatible object store for guest artifacts | 9100 / 9101 |
 | `order-stream` | Off-chain order relay (REST API + WebSocket)   | 8585      |
 | `broker`       | Reference prover (dev mode, runs in-stack)     | host network |
 
-The `broker` service runs only when `RISC0_DEV_MODE=1` is set (which is the default), so test proofs are mocked and complete in seconds.
+The `broker` service runs only when `RISC0_DEV_MODE=1`, which is the default. Test proofs are mocked and complete in seconds.
 
 ## Prerequisites
 
@@ -31,7 +31,7 @@ You'll need:
 - [just](https://github.com/casey/just?tab=readme-ov-file#just)
 
 <Warning>
-If your Docker daemon has `"iptables": false` in `/etc/docker/daemon.json`, containers will fail to resolve external DNS during the build. Either remove that flag and `sudo systemctl restart docker`, or add an explicit `"dns": ["8.8.8.8", "1.1.1.1"]` entry — without working in-container DNS, `cargo` and `apt-get` inside the build images cannot fetch dependencies.
+If your Docker daemon has `"iptables": false` in `/etc/docker/daemon.json`, containers will fail to resolve external DNS during the build. Either remove that flag and run `sudo systemctl restart docker`, or add an explicit `"dns": ["8.8.8.8", "1.1.1.1"]` entry. Without working in-container DNS, `cargo` and `apt-get` inside the build images cannot fetch dependencies.
 </Warning>
 
 ## First-time host build
@@ -75,7 +75,7 @@ You should see `anvil`, `broker`, `minio`, `order-stream`, and `postgres` as `Up
 
 ## Using the localnet
 
-`just localnet up` populates `.env.localnet` with everything a requestor or prover client needs — RPC URLs, contract addresses, and a funded test wallet. Source it into your shell:
+`just localnet up` populates `.env.localnet` with the values a requestor or prover client needs: RPC URLs, contract addresses, and a funded test wallet. Source it into your shell:
 
 ```bash Terminal
 source .env.localnet
@@ -105,7 +105,7 @@ export AWS_ACCESS_KEY_ID=admin
 export AWS_SECRET_ACCESS_KEY=password
 ```
 
-With these set you can submit a request through the [Boundless CLI](/developers/tooling/cli) exactly as you would against a real network — the in-stack broker will pick it up and fulfil it in dev mode within a few seconds.
+With these set, you can submit a request through the [Boundless CLI](/developers/tooling/cli) the same way you would against a real network. The in-stack broker picks it up and fulfils it in dev mode within seconds.
 
 ## Logs and lifecycle
 
