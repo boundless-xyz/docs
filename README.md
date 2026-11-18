@@ -1,3 +1,5 @@
+> **Archived:** This repository is no longer maintained and is preserved for reference. For context on the Boundless ZK proving protocol pause and transition, see the [Boundless Foundation announcement](https://boundlessfdn.org/blog/zkc-the-ai-access-coin).
+
 # Boundless Documentation
 
 Official documentation for Boundless, available at [docs.boundless.network](https://docs.boundless.network).
